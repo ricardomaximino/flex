@@ -10,3 +10,10 @@ spring:
     port: ${RABBITMQ_PORT:5672}
     username: ${RABBITMQ_USER:user}
     password: ${RABBITMQ_PASSWORD:password}
+
+logging:
+  level:
+    root: INFO
+    es.brasatech: DEBUG
+    org.springframework: ERROR
+

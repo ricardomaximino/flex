@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface CustomUserRepository {
-    List<User> findByDynamicCriteriaWithOperators(Map<String, SearchCriteria> searchCriteria);
-    Page<User> findByDynamicCriteriaWithPaging(Map<String, Object> searchCriteria, Pageable pageable);
+    List<User> findByDynamicSimpleCriteria(Map<String, Object> searchCriteria);
+    List<User> findByDynamicAdvancedCriteria(Map<String, SearchCriteria> searchCriteria);
+    Page<User> findByDynamicSimpleCriteriaWithPaging(Map<String, Object> searchCriteria, Pageable pageable);
+    Page<User> findByDynamicAdvancedCriteriaWithPaging(Map<String, SearchCriteria> searchCriteria, Pageable pageable);
 }
