@@ -1,4 +1,4 @@
-package es.brasatech.flex.user;
+package es.brasatech.flex.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

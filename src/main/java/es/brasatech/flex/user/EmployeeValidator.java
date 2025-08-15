@@ -1,5 +1,6 @@
 package es.brasatech.flex.user;
 
+import es.brasatech.flex.data.Data;
 import es.brasatech.flex.shared.Flex;
 import es.brasatech.flex.shared.ValidationException;
 import es.brasatech.flex.shared.Validator;
@@ -23,16 +24,16 @@ public class EmployeeValidator implements Validator {
 
     @Override
     public void validate(Flex flex) {
-        validateEmployeeFields((User) flex);
+        validateEmployeeFields((Data) flex);
     }
 
-    private void validateEmployeeFields(User user) {
+    private void validateEmployeeFields(Data data) {
         var errorList = new ArrayList<String>();
         var warnList = new ArrayList<String>();
         var result = new HashMap<String, List<String>>();
         result.put(ERROR, errorList);
         result.put(WARN, warnList);
-        var address = (Map<String, Object>) user.getCustomFields().get("address");
+        var address = (Map<String, Object>) data.getCustomFields().get("address");
         var homeAddress = (Map<String, Object>) address.get("home");
         validateAddress(homeAddress, result);
 

@@ -1,5 +1,6 @@
 package es.brasatech.flex.user;
 
+import es.brasatech.flex.data.Data;
 import es.brasatech.flex.shared.Flex;
 import es.brasatech.flex.shared.ValidationException;
 import es.brasatech.flex.shared.Validator;
@@ -19,11 +20,11 @@ public class CustomerValidator implements Validator {
         if(!NAME.equals(flex.getType())) {
             throw new ValidationException("It is not a customer!!");
         }
-        if(!validateCustomerFields((User) flex)){
+        if(!validateCustomerFields((Data) flex)){
             throw new ValidationException("It is not a valid customer!!");
         }
     }
-    private boolean validateCustomerFields(User user) {
-        return (user.getCustomFields().containsKey("customerNumber"));
+    private boolean validateCustomerFields(Data data) {
+        return (data.getCustomFields().containsKey("customerNumber"));
     }
 }

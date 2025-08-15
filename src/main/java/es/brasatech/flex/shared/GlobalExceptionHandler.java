@@ -18,4 +18,16 @@ public class GlobalExceptionHandler {
         log.warn("Validation exception error: {}", exception.getMessage());
         return ErrorResponse.builder(exception, HttpStatus.BAD_REQUEST, exception.getMessage()).instance(URI.create(request.getRequestURI())).build();
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ErrorResponse validationError(HttpServletRequest request, NotFoundException exception){
+        log.warn("Not found exception error: {}", exception.getMessage());
+        return ErrorResponse.builder(exception, HttpStatus.NOT_FOUND, exception.getMessage()).instance(URI.create(request.getRequestURI())).build();
+    }
+
+    @ExceptionHandler(SearchCriteriaException.class)
+    public ErrorResponse validationError(HttpServletRequest request, SearchCriteriaException exception){
+        log.warn("Search criteria exception error: {}", exception.getMessage());
+        return ErrorResponse.builder(exception, HttpStatus.BAD_REQUEST, exception.getMessage()).instance(URI.create(request.getRequestURI())).build();
+    }
 }

@@ -1,5 +1,6 @@
-package es.brasatech.flex.user;
+package es.brasatech.flex.data;
 
+import es.brasatech.flex.shared.SearchCriteriaException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,56 +21,58 @@ import java.util.regex.Pattern;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CustomUserRepositoryImpl implements CustomUserRepository {
+public class CustomDataRepositoryImpl implements CustomDataRepository {
 
+    public static final String EXECUTING_PAGINATED_SEARCH_QUERY_TOTAL = "Executing paginated search query: {}, Total: {}";
+    public static final String ERROR_BUILDING_CRITERIA_FOR_FIELD = "Error building criteria for field '{}': {}";
     private final MongoTemplate mongoTemplate;
 
     @Override
-    public List<User> findByDynamicSimpleCriteria(Map<String, Object> searchCriteria) {
+    public List<Data> findByDynamicSimpleCriteria(Map<String, Object> searchCriteria) {
         Query query = buildSimpleQuery(searchCriteria);
         log.debug("Executing simple search query: {}", query);
-        return mongoTemplate.find(query, User.class);
+        return mongoTemplate.find(query, Data.class);
     }
 
     @Override
-    public List<User> findByDynamicAdvancedCriteria(Map<String, SearchCriteria> searchCriteria) {
+    public List<Data> findByDynamicAdvancedCriteria(Map<String, SearchCriteria> searchCriteria) {
         Query query = buildAdvancedQuery(searchCriteria);
 
         log.debug("Executing advanced search query: {}", query);
-        return mongoTemplate.find(query, User.class);
+        return mongoTemplate.find(query, Data.class);
     }
 
     @Override
-    public Page<User> findByDynamicSimpleCriteriaWithPaging(Map<String, Object> searchCriteria, Pageable pageable) {
+    public Page<Data> findByDynamicSimpleCriteriaWithPaging(Map<String, Object> searchCriteria, Pageable pageable) {
         Query query = buildSimpleQuery(searchCriteria);
 
         // Get total count before adding pagination
-        long total = mongoTemplate.count(Query.of(query).skip(0).limit(0), User.class);
+        long total = mongoTemplate.count(Query.of(query).skip(0).limit(0), Data.class);
 
         // Add pagination to query
         query.with(pageable);
 
         // Get results
-        List<User> results = mongoTemplate.find(query, User.class);
+        List<Data> results = mongoTemplate.find(query, Data.class);
 
-        log.debug("Executing paginated search query: {}, Total: {}", query, total);
+        log.debug(EXECUTING_PAGINATED_SEARCH_QUERY_TOTAL, query, total);
         return new PageImpl<>(results, pageable, total);
     }
 
     @Override
-    public Page<User> findByDynamicAdvancedCriteriaWithPaging(Map<String, SearchCriteria> searchCriteria, Pageable pageable) {
+    public Page<Data> findByDynamicAdvancedCriteriaWithPaging(Map<String, SearchCriteria> searchCriteria, Pageable pageable) {
         Query query = buildAdvancedQuery(searchCriteria);
 
         // Get total count before adding pagination
-        long total = mongoTemplate.count(Query.of(query).skip(0).limit(0), User.class);
+        long total = mongoTemplate.count(Query.of(query).skip(0).limit(0), Data.class);
 
         // Add pagination to query
         query.with(pageable);
 
         // Get results
-        List<User> results = mongoTemplate.find(query, User.class);
+        List<Data> results = mongoTemplate.find(query, Data.class);
 
-        log.debug("Executing paginated search query: {}, Total: {}", query, total);
+        log.debug(EXECUTING_PAGINATED_SEARCH_QUERY_TOTAL, query, total);
         return new PageImpl<>(results, pageable, total);
     }
 
@@ -93,9 +96,9 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
                 addStandardFieldCriteria(query, key, value);
             } else {
                 // For custom fields, handle different value types
-                if (value instanceof String && ((String) value).contains("*")) {
+                if (value instanceof String stringValue && stringValue.contains("*")) {
                     // Support wildcard search with *
-                    String regexValue = ((String) value).replace("*", ".*");
+                    String regexValue = stringValue.replace("*", ".*");
                     query.addCriteria(Criteria.where("customFields." + key).regex(regexValue, "i"));
                 } else {
                     query.addCriteria(Criteria.where("customFields." + key).is(value));
@@ -124,8 +127,8 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
                     criteriaList.add(mongoCriteria);
                 }
             } catch (Exception e) {
-                log.error("Error building criteria for field '{}': {}", fieldName, e.getMessage());
-                throw new RuntimeException("Invalid search criteria for field: " + fieldName, e);
+                log.error(ERROR_BUILDING_CRITERIA_FOR_FIELD, fieldName, e.getMessage());
+                throw new SearchCriteriaException("Invalid search criteria for field: " + fieldName, searchCriteria);
             }
         }
 
@@ -149,8 +152,8 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
                 query.addCriteria(Criteria.where("id").is(value));
                 break;
             case "type":
-                if (value instanceof String && ((String) value).contains("*")) {
-                    String regexValue = ((String) value).replace("*", ".*");
+                if (value instanceof String stringValue && stringValue.contains("*")) {
+                    String regexValue = stringValue.replace("*", ".*");
                     query.addCriteria(Criteria.where("type").regex(regexValue, "i"));
                 } else {
                     query.addCriteria(Criteria.where("type").is(value));
@@ -201,9 +204,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
         }
 
         try {
-            if (dateValue instanceof String) {
-                String dateStr = (String) dateValue;
-
+            if (dateValue instanceof String dateStr) {
                 // Handle different date formats
                 if (dateStr.contains("T")) {
                     // ISO format: 2024-01-15T10:30:00
@@ -220,12 +221,12 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
                 // Try to parse as ISO instant and convert
                 return LocalDateTime.parse(dateStr);
 
-            } else if (dateValue instanceof LocalDateTime) {
-                return (LocalDateTime) dateValue;
-            } else if (dateValue instanceof LocalDate) {
-                return ((LocalDate) dateValue).atStartOfDay();
-            } else if (dateValue instanceof Date) {
-                return ((Date) dateValue).toInstant()
+            } else if (dateValue instanceof LocalDateTime localDateTime) {
+                return localDateTime;
+            } else if (dateValue instanceof LocalDate localDate) {
+                return localDate.atStartOfDay();
+            } else if (dateValue instanceof Date date) {
+                return date.toInstant()
                         .atZone(ZoneId.systemDefault())
                         .toLocalDateTime();
             }
@@ -268,20 +269,20 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
                 return Criteria.where(fullFieldName).lte(convertValueForComparison(value));
 
             case CONTAINS:
-                if (value instanceof String) {
-                    return Criteria.where(fullFieldName).regex(Pattern.quote((String) value), "i");
+                if (value instanceof String stringValue) {
+                    return Criteria.where(fullFieldName).regex(Pattern.quote(stringValue), "i");
                 }
                 return Criteria.where(fullFieldName).is(value);
 
             case STARTS_WITH:
-                if (value instanceof String) {
-                    return Criteria.where(fullFieldName).regex("^" + Pattern.quote((String) value), "i");
+                if (value instanceof String stringValue) {
+                    return Criteria.where(fullFieldName).regex("^" + Pattern.quote(stringValue), "i");
                 }
                 return Criteria.where(fullFieldName).is(value);
 
             case ENDS_WITH:
-                if (value instanceof String) {
-                    return Criteria.where(fullFieldName).regex(Pattern.quote((String) value) + "$", "i");
+                if (value instanceof String stringValue) {
+                    return Criteria.where(fullFieldName).regex(Pattern.quote(stringValue) + "$", "i");
                 }
                 return Criteria.where(fullFieldName).is(value);
 
@@ -294,15 +295,15 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
                 return Criteria.where(fullFieldName).nin(ninValues);
 
             case EXISTS:
-                Boolean exists = (Boolean) value;
+                boolean exists = (Boolean) value;
                 return Criteria.where(fullFieldName).exists(exists);
 
             case BETWEEN:
                 return handleBetweenOperation(fullFieldName, value);
 
             case REGEX:
-                if (value instanceof String) {
-                    return Criteria.where(fullFieldName).regex((String) value, "i");
+                if (value instanceof String stringValue) {
+                    return Criteria.where(fullFieldName).regex(stringValue, "i");
                 }
                 throw new IllegalArgumentException("REGEX operation requires String value");
 
@@ -315,8 +316,8 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
     private Collection<?> convertToCollection(Object value) {
         if (value instanceof Collection) {
             return (Collection<?>) value;
-        } else if (value instanceof Object[]) {
-            return Arrays.asList((Object[]) value);
+        } else if (value instanceof Object[] arrayValue) {
+            return Arrays.asList(arrayValue);
         } else {
             return Collections.singletonList(value);
         }
@@ -346,7 +347,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
 
     private Object convertValueForComparison(Object value) {
         // Convert string dates to LocalDateTime for comparison
-        if (value instanceof String && ((String) value).matches("\\d{4}-\\d{2}-\\d{2}.*")) {
+        if (value instanceof String stringValue && stringValue.matches("\\d{4}-\\d{2}-\\d{2}.*")) {
             try {
                 return parseDate(value);
             } catch (Exception e) {

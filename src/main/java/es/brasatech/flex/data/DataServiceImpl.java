@@ -1,8 +1,6 @@
-package es.brasatech.flex.user;
+package es.brasatech.flex.data;
 
-import es.brasatech.flex.shared.InternalUserEvent;
-import es.brasatech.flex.shared.Validator;
-import es.brasatech.flex.shared.ValidatorManager;
+import es.brasatech.flex.shared.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,78 +18,88 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class DataServiceImpl implements DataService {
 
-    private final UserRepository userRepository;
-    private final ValidatorManager<Validator, User> validatorManager;
+    private final DataRepository dataRepository;
+    private final ValidatorManager validatorManager;
     private final ApplicationEventPublisher internalPublisher;
 
-    public User save(Map<String, Object> data) {
-        User user = new User();
+    @Override
+    public Data save(Map<String, Object> data) {
+        Data user = new Data();
         user.setType((String) data.get("type"));
         removeStandard(data);
         user.setCustomFields(data);
         if(user.getType() == null) {
-            throw new RuntimeException("Type field is a mandatory data");
+            throw new ValidationException("Type field is a mandatory data");
         }
         validatorManager.validate(user);
         user.prepareToSave();
-        var savedUser = userRepository.save(user);
-        internalPublisher.publishEvent(new InternalUserEvent<User>(savedUser, "New user[" + savedUser.getType() + "] was created!"));
+        var savedUser = dataRepository.save(user);
+        internalPublisher.publishEvent(new InternalDataEvent<Data>(savedUser, "New [" + savedUser.getType() + "] was created!"));
         return savedUser;
     }
 
-    public User update(String id, Map<String, Object> data) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    @Override
+    public Data update(String id, Map<String, Object> data) {
+        Data user = dataRepository.findById(id).orElseThrow(() -> new NotFoundException("Data not found"));
         removeStandard(data);
         user.setCustomFields(data);
         validatorManager.validate(user);
         user.prepareToSave();
-        return userRepository.save(user);
+        return dataRepository.save(user);
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    @Override
+    public List<Data> findAll() {
+        return dataRepository.findAll();
     }
 
-    public Optional<User> findById(String id) {
-        return userRepository.findById(id);
+    @Override
+    public Optional<Data> findById(String id) {
+        return dataRepository.findById(id);
     }
 
+    @Override
     public void deleteById(String id) {
-        userRepository.deleteById(id);
+        dataRepository.deleteById(id);
     }
 
-    public List<User> simpleSearch(Map<String, Object> searchCriteria) {
+    @Override
+    public List<Data> simpleSearch(Map<String, Object> searchCriteria) {
         log.info("Performing simple search with criteria: {}", searchCriteria);
-        return userRepository.findByDynamicSimpleCriteria(searchCriteria);
+        return dataRepository.findByDynamicSimpleCriteria(searchCriteria);
     }
 
-    public List<User> advancedSearch(Map<String, SearchCriteria> searchCriteria) {
+    @Override
+    public List<Data> advancedSearch(Map<String, SearchCriteria> searchCriteria) {
         log.info("Performing advanced search with criteria: {}", searchCriteria);
-        return userRepository.findByDynamicAdvancedCriteria(searchCriteria);
+        return dataRepository.findByDynamicAdvancedCriteria(searchCriteria);
     }
 
-    public Page<User> simpleSearchWithPaging(Map<String, Object> searchCriteria,
+    @Override
+    public Page<Data> simpleSearchWithPaging(Map<String, Object> searchCriteria,
                                              int page, int size, String sortBy) {
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
         log.info("Performing paginated simple search with criteria: {}, page: {}, size: {}",
                 searchCriteria, page, size);
-        return userRepository.findByDynamicSimpleCriteriaWithPaging(searchCriteria, pageable);
+        return dataRepository.findByDynamicSimpleCriteriaWithPaging(searchCriteria, pageable);
     }
 
-    public Page<User> advancedSearchWithPaging(Map<String, SearchCriteria> searchCriteria, int page, int size, String sortBy) {
+    @Override
+    public Page<Data> advancedSearchWithPaging(Map<String, SearchCriteria> searchCriteria, int page, int size, String sortBy) {
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
         log.info("Performing paginated advanced search with criteria: {}, page: {}, size: {}",
                 searchCriteria, page, size);
-        return userRepository.findByDynamicAdvancedCriteriaWithPaging(searchCriteria, pageable);
+        return dataRepository.findByDynamicAdvancedCriteriaWithPaging(searchCriteria, pageable);
     }
 
-    public List<User> findRecentUsers(int days) {
+    @Override
+    public List<Data> findRecentUsers(int days) {
         LocalDateTime cutoff = LocalDateTime.now().minusDays(days);
         Map<String, Object> criteria = new HashMap<>();
         Map<String, Object> dateRange = new HashMap<>();
@@ -101,7 +109,8 @@ public class UserService {
         return simpleSearch(criteria);
     }
 
-    protected void removeStandard(Map<String, Object> data) {
+    @Override
+    public void removeStandard(Map<String, Object> data) {
         data.remove("id");
         data.remove("creationDate");
         data.remove("updateDate");

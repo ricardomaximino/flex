@@ -1,8 +1,7 @@
-package es.brasatech.flex.user;
+package es.brasatech.flex.data;
 
 import es.brasatech.flex.shared.Flex;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,11 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Data
+@lombok.Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "user")
-public class User implements Flex {
+@Document(collection = "data")
+public class Data implements Flex {
     @Id
     private String id;
 
