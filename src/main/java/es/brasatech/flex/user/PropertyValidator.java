@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class CustomerValidator implements Validator {
-    private static final String NAME = "CUSTOMER";
+public class PropertyValidator implements Validator {
+    private static final String NAME = "PROPERTY";
 
     @Override
     public String name() {
@@ -20,13 +20,13 @@ public class CustomerValidator implements Validator {
     @Override
     public void validate(Flex flex) {
         if(!NAME.equals(flex.getType())) {
-            throw new ValidationException("It is not a customer!!");
+            throw new ValidationException("It is not a property!!");
         }
         if(!validateCustomerFields((Data) flex)){
-            throw new ValidationException("It is not a valid customer!!");
+            throw new ValidationException("It is not a valid property!!");
         }
     }
     private boolean validateCustomerFields(Data data) {
-        return (data.getCustomFields().containsKey("customerNumber"));
+        return (data.getCustomFields().containsKey("propertyNumber"));
     }
 }

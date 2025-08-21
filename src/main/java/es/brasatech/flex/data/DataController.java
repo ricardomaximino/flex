@@ -12,34 +12,33 @@ import java.util.Map;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/data")
 @RequiredArgsConstructor
 public class DataController {
 
     private final DataService service;
 
     @PostMapping
-    public ResponseEntity<Data> create(@RequestBody Map<String, Object> data) {
-        Data saved = service.save(data);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    public ResponseEntity<Map<String, Object>> create(@RequestBody Map<String, Object> data) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(RawMapper.map(service.save(data)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Data> update(
+    public ResponseEntity<Map<String, Object>> update(
             @PathVariable String id,
             @RequestBody Map<String, Object> data) {
-        Data updated = service.update(id, data);
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.ok(RawMapper.map(service.update(id, data)));
     }
 
     @GetMapping
-    public ResponseEntity<List<Data>> getAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<Map<String, Object>>> getAll() {
+        return ResponseEntity.ok(service.findAll().stream().map(RawMapper::map).toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Data> getById(@PathVariable String id) {
+    public ResponseEntity<Map<String, Object>> getById(@PathVariable String id) {
         return service.findById(id)
+                .map(RawMapper::map)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -51,36 +50,34 @@ public class DataController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<Data>> search(@RequestBody Map<String, Object> searchCriteria) {
-        List<Data> results = service.simpleSearch(searchCriteria);
-        return ResponseEntity.ok(results);
+    public ResponseEntity<List<Map<String, Object>>> search(@RequestBody Map<String, Object> searchCriteria) {
+        return ResponseEntity.ok(service.simpleSearch(searchCriteria).stream().map(RawMapper::map).toList());
     }
 
     @PostMapping("/advanced-search")
-    public ResponseEntity<List<Data>> advancedSearch(@RequestBody Map<String, SearchCriteria> searchCriteria) {
-        List<Data> results = service.advancedSearch(searchCriteria);
-        return ResponseEntity.ok(results);
+    public ResponseEntity<List<Map<String, Object>>> advancedSearch(@RequestBody Map<String, SearchCriteria> searchCriteria) {
+        return ResponseEntity.ok(service.advancedSearch(searchCriteria).stream().map(RawMapper::map).toList());
     }
 
     @PostMapping("/search/paginated")
-    public ResponseEntity<Page<Data>> basicSearchWithPaging(
+    public ResponseEntity<Page<Map<String, Object>>> basicSearchWithPaging(
             @RequestBody Map<String, Object> searchCriteria,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "creationDate") String sortBy) {
 
-        Page<Data> results = service.simpleSearchWithPaging(searchCriteria, page, size, sortBy);
+        Page<Map<String, Object>> results = service.simpleSearchWithPaging(searchCriteria, page, size, sortBy).map(RawMapper::map);
         return ResponseEntity.ok(results);
     }
 
     @PostMapping("/advanced-search/paginated")
-    public ResponseEntity<Page<Data>> advancedSearchWithPaging(
+    public ResponseEntity<Page<Map<String, Object>>> advancedSearchWithPaging(
             @RequestBody Map<String, SearchCriteria> searchCriteria,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "creationDate") String sortBy) {
 
-        Page<Data> results = service.advancedSearchWithPaging(searchCriteria, page, size, sortBy);
+        Page<Map<String, Object>> results = service.advancedSearchWithPaging(searchCriteria, page, size, sortBy).map(RawMapper::map);
         return ResponseEntity.ok(results);
     }
 }

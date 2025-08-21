@@ -5,6 +5,7 @@ import es.brasatech.flex.shared.Flex;
 import es.brasatech.flex.shared.ValidationException;
 import es.brasatech.flex.shared.Validator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@Component
 public class EmployeeValidator implements Validator {
     private static final String NAME = "EMPLOYEE";
     private static final String ERROR = "error";
