@@ -27,12 +27,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      MONGO_URI: mongodb://root:password@mongodb:27017/?authSource=admin
+      MONGO_URI: "mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongodb:27017/?authSource=admin"
       MONGO_DATABASE: flex
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
-      RABBITMQ_USER: user
-      RABBITMQ_PASSWORD: password
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASS}
     depends_on:
       - mongodb
       - rabbitmq
