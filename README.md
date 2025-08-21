@@ -1,2 +1,4 @@
 # flex
 Flex is a software framework designed for easy customization of both its data handling and it's behaviour
+docker build -t ricardomaximino/flex:latest .
+docker push ricardomaximino/flex:latest

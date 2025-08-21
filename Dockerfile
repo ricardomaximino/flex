@@ -7,7 +7,7 @@ RUN apk add --no-cache libc6-compat
 # Set working directory
 WORKDIR /app
 
-# Copy the native binary
+# Copy the native binary [Linux only]
 COPY target/flex .
 
 # Make it executable
