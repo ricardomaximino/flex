@@ -33,6 +33,7 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: ${RABBITMQ_USER}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASS}
+      SPRING_PROFILES_ACTIVE: prod
     depends_on:
       - mongodb
       - rabbitmq

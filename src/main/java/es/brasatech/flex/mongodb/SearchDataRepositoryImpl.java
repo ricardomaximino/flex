@@ -1,5 +1,9 @@
-package es.brasatech.flex.data;
+package es.brasatech.flex.mongodb;
 
+import es.brasatech.flex.data.Data;
+import es.brasatech.flex.data.SearchCriteria;
+import es.brasatech.flex.data.SearchDataRepository;
+import es.brasatech.flex.data.SearchOperation;
 import es.brasatech.flex.shared.SearchCriteriaException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,31 +22,30 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
-public class CustomDataRepositoryImpl implements CustomDataRepository {
+public class SearchDataRepositoryImpl implements SearchDataRepository<MongoDBData> {
 
     public static final String EXECUTING_PAGINATED_SEARCH_QUERY_TOTAL = "Executing paginated search query: {}, Total: {}";
     public static final String ERROR_BUILDING_CRITERIA_FOR_FIELD = "Error building criteria for field '{}': {}";
     private final MongoTemplate mongoTemplate;
 
     @Override
-    public List<Data> findByDynamicSimpleCriteria(Map<String, Object> searchCriteria) {
+    public List<MongoDBData> findByDynamicSimpleCriteria(Map<String, Object> searchCriteria) {
         Query query = buildSimpleQuery(searchCriteria);
         log.debug("Executing simple search query: {}", query);
-        return mongoTemplate.find(query, Data.class);
+        return mongoTemplate.find(query, MongoDBData.class);
     }
 
     @Override
-    public List<Data> findByDynamicAdvancedCriteria(Map<String, SearchCriteria> searchCriteria) {
+    public List<MongoDBData> findByDynamicAdvancedCriteria(Map<String, SearchCriteria> searchCriteria) {
         Query query = buildAdvancedQuery(searchCriteria);
 
         log.debug("Executing advanced search query: {}", query);
-        return mongoTemplate.find(query, Data.class);
+        return mongoTemplate.find(query, MongoDBData.class);
     }
 
     @Override
-    public Page<Data> findByDynamicSimpleCriteriaWithPaging(Map<String, Object> searchCriteria, Pageable pageable) {
+    public Page<MongoDBData> findByDynamicSimpleCriteriaWithPaging(Map<String, Object> searchCriteria, Pageable pageable) {
         Query query = buildSimpleQuery(searchCriteria);
 
         // Get total count before adding pagination
@@ -53,14 +55,14 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         query.with(pageable);
 
         // Get results
-        List<Data> results = mongoTemplate.find(query, Data.class);
+        List<MongoDBData> results = mongoTemplate.find(query, MongoDBData.class);
 
         log.debug(EXECUTING_PAGINATED_SEARCH_QUERY_TOTAL, query, total);
         return new PageImpl<>(results, pageable, total);
     }
 
     @Override
-    public Page<Data> findByDynamicAdvancedCriteriaWithPaging(Map<String, SearchCriteria> searchCriteria, Pageable pageable) {
+    public Page<MongoDBData> findByDynamicAdvancedCriteriaWithPaging(Map<String, SearchCriteria> searchCriteria, Pageable pageable) {
         Query query = buildAdvancedQuery(searchCriteria);
 
         // Get total count before adding pagination
@@ -70,7 +72,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         query.with(pageable);
 
         // Get results
-        List<Data> results = mongoTemplate.find(query, Data.class);
+        List<MongoDBData> results = mongoTemplate.find(query, MongoDBData.class);
 
         log.debug(EXECUTING_PAGINATED_SEARCH_QUERY_TOTAL, query, total);
         return new PageImpl<>(results, pageable, total);

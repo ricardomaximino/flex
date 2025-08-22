@@ -1,15 +1,13 @@
 package es.brasatech.flex.data;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import es.brasatech.flex.shared.Flex;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository
-public interface DataRepository extends MongoRepository<Data, String>, CustomDataRepository {
 
-    // Basic queries for specific fields
-    List<Data> findByType(String type);
-    List<Data> findByCreationDateBetween(LocalDateTime start, LocalDateTime end);
+public interface DataRepository<T extends Flex> {
+
+    List<T> findByType(String type);
+    List<T> findByCreationDateBetween(LocalDateTime start, LocalDateTime end);
 }

@@ -1,6 +1,5 @@
 package es.brasatech.flex.data;
 
-import es.brasatech.flex.shared.DataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DataController {
 
-    private final DataService service;
+    private final DataService<Data> service;
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> create(@RequestBody Map<String, Object> data) {
