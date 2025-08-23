@@ -19,8 +19,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-@Profile("standalone")
 @Configuration
+@Profile("standalone")
 public class MapDBConfig {
 
     @Bean
