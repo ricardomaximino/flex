@@ -1,6 +1,10 @@
 spring:
   application:
     name: flex
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
 
 logging:
   level:
@@ -14,6 +18,8 @@ spring:
   config:
     activate:
       on-profile: prod
+  autoconfigure:
+    exclude: []
   application:
   data:
     mongodb:
@@ -25,14 +31,3 @@ spring:
     username: ${RABBITMQ_USER:user}
     password: ${RABBITMQ_PASSWORD:password}
 
----
-
-spring:
-  config:
-    activate:
-      on-profile: standalone
-
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
-      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
