@@ -5,6 +5,7 @@ import es.brasatech.flex.data.DataService;
 import es.brasatech.flex.data.SearchCriteria;
 import es.brasatech.flex.data.SearchDataRepository;
 import es.brasatech.flex.shared.InternalDataEvent;
+import es.brasatech.flex.shared.NotFoundException;
 import es.brasatech.flex.shared.ValidationException;
 import es.brasatech.flex.shared.ValidatorManager;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class MapDBDataServiceImpl implements DataService<Data> {
 
     @Override
     public Data update(String id, Map<String, Object> updateData) {
-        MapDBData existingData = dataStore.findById(id).orElseThrow(() -> new RuntimeException("Data not found with id: " + id));
+        MapDBData existingData = dataStore.findById(id).orElseThrow(() -> new NotFoundException("Data not found with id: " + id));
         existingData.setCustomFields(updateData);
         validatorManager.validate(existingData);
         return dataStore.save(existingData);
@@ -96,7 +97,7 @@ public class MapDBDataServiceImpl implements DataService<Data> {
 
     public Data partialUpdate(String id, Map<String, Object> updateFields) {
         MapDBData existingData = dataStore.findById(id)
-                .orElseThrow(() -> new RuntimeException("Data not found with id: " + id));
+                .orElseThrow(() -> new NotFoundException("Data not found with id: " + id));
 
         // Update only the provided fields
         Map<String, Object> currentCustomFields = existingData.getCustomFields();
