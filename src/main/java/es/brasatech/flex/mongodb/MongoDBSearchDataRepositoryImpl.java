@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @RequiredArgsConstructor
-public class SearchDataRepositoryImpl implements SearchDataRepository<MongoDBData> {
+public class MongoDBSearchDataRepositoryImpl implements SearchDataRepository<MongoDBData> {
 
     public static final String EXECUTING_PAGINATED_SEARCH_QUERY_TOTAL = "Executing paginated search query: {}, Total: {}";
     public static final String ERROR_BUILDING_CRITERIA_FOR_FIELD = "Error building criteria for field '{}': {}";

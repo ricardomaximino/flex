@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-public class DataServiceImpl implements DataService<Data> {
+public class MongoDBDataServiceImpl implements DataService<Data> {
 
     private final MongoDBDataRepository dataRepository;
     private final ValidatorManager validatorManager;

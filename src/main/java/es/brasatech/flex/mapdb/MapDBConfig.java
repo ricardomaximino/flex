@@ -4,8 +4,6 @@ import es.brasatech.flex.data.Data;
 import es.brasatech.flex.data.DataService;
 import es.brasatech.flex.data.SearchDataRepository;
 import es.brasatech.flex.shared.ValidatorManager;
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -13,15 +11,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.context.annotation.Profile;
 
-import java.io.File;
 import java.nio.file.Path;
-import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 @Configuration
-@Profile("!prod")
+@Profile("standalone")
 @ImportRuntimeHints(MapDBHints.class)
 public class MapDBConfig {
 
@@ -35,7 +28,7 @@ public class MapDBConfig {
 
     @Bean
     public SearchDataRepository<MapDBData> mapDBDataSearchDataRepository(MapDBDataStore mapDBDataStore) {
-        return new SearchDataRepositoryImpl(mapDBDataStore);
+        return new MapDBSearchDataRepositoryImpl(mapDBDataStore);
     }
 
     @Bean
@@ -43,18 +36,4 @@ public class MapDBConfig {
         return new MapDBDataServiceImpl(mapDBDataStore, searchDataRepository, validatorManager, internalPublisher);
     }
 
-    public Map<String, Object> createDB(String type) {
-        DB dbDisk, dbMemory;
-        File file = new File(type);
-
-        dbDisk = DBMaker.fileDB(file).make();
-        ConcurrentMap onDisk = dbDisk.hashMap(type).create();
-        dbMemory = DBMaker.memoryDB().make();
-        ConcurrentMap<String, Object> inMemory = dbMemory.hashMap(type)
-               .expireAfterGet(1, TimeUnit.SECONDS)
-               .expireOverflow(onDisk)
-               .expireExecutor(Executors.newScheduledThreadPool(2))
-               .create();
-        return inMemory;
-    }
 }

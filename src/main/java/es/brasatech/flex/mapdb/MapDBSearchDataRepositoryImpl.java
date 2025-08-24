@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
-public class SearchDataRepositoryImpl implements SearchDataRepository<MapDBData> {
+public class MapDBSearchDataRepositoryImpl implements SearchDataRepository<MapDBData> {
 
     private final MapDBDataStore dataStore; // Assumes you have a MapDB data store component
 

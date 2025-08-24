@@ -37,9 +37,9 @@ public class MapDBHints implements RuntimeHintsRegistrar {
         hints.reflection().registerType(MapDBDataServiceImpl.class, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS);
         hints.reflection().registerType(MapDBDataServiceImpl.class, MemberCategory.INVOKE_DECLARED_CONSTRUCTORS);
 
-        hints.reflection().registerType(SearchDataRepositoryImpl.class, MemberCategory.INVOKE_PUBLIC_METHODS);
-        hints.reflection().registerType(SearchDataRepositoryImpl.class, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS);
-        hints.reflection().registerType(SearchDataRepositoryImpl.class, MemberCategory.INVOKE_DECLARED_CONSTRUCTORS);
+        hints.reflection().registerType(MapDBSearchDataRepositoryImpl.class, MemberCategory.INVOKE_PUBLIC_METHODS);
+        hints.reflection().registerType(MapDBSearchDataRepositoryImpl.class, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS);
+        hints.reflection().registerType(MapDBSearchDataRepositoryImpl.class, MemberCategory.INVOKE_DECLARED_CONSTRUCTORS);
 
         hints.reflection().registerType(MapDBDataServiceImpl.class, MemberCategory.INVOKE_PUBLIC_METHODS);
         hints.reflection().registerType(MapDBDataServiceImpl.class, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS);
