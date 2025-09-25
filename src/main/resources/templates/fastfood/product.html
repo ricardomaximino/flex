@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Entry Form</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="Fast food product creation" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="author" content="BrasaTech" />
+    <meta name="generator" content="BrasaTech Digital Solutions" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/images/favicon.png}" href="../../static/images/favicon.png" />
+
+    <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+
+</head>
+<body>
+
+<h1>🛠️ Product Setup</h1>
+
+<form id="productForm" method="POST" action="/product" th:action="@{/product}">
+    <!-- Identifiers -->
+    <div class="section">
+        <label>Name:</label>
+        <input type="text" name="name" required>
+
+        <label>Alias (comma-separated):</label>
+        <input type="text" name="alias">
+    </div>
+
+    <!-- Price -->
+    <div class="section">
+        <h3>💰 Price Configuration</h3>
+
+        <label>Cost:</label>
+        <input type="number" name="price.cost" id="price.cost" step="0.01" required>
+
+        <label>Tax Percentage (%):</label>
+        <input type="number" name="price.tax" id="price.tax" step="0.01" required>
+
+        <div class="price-mode">
+            <label><input type="radio" name="priceMode" value="margin" checked> Enter Margin of Benefit</label>
+            <label><input type="radio" name="priceMode" value="final"> Enter Final Price</label>
+        </div>
+
+        <div id="marginSection">
+            <label>Margin of Benefit (%):</label>
+            <div class="slider-label">
+                <span>0%</span><span>100%</span>
+            </div>
+            <input type="range" id="marginSlider" min="0" max="100" value="20">
+            <div>Selected Margin: <span id="price.marginValue">20</span>%</div>
+            <div>Final Price: €<span id="price.finalPrice">0.00</span></div>
+        </div>
+
+        <div id="finalSection" style="display:none;">
+            <label>Final Price:</label>
+            <input type="number" id="finalInput" step="0.01">
+            <div>Calculated Margin: <span id="price.calculatedMargin">0</span>%</div>
+        </div>
+
+        <label>Sellable:</label>
+        <select name="price.sellable">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+
+        <label>Unit:</label>
+        <select name="unit">
+            <option value="GRAM">Gram</option>
+            <option value="KILOGRAM">Kilogram</option>
+            <option value="LITER">Liter</option>
+        </select>
+
+        <label>Shrinkage (%):</label>
+        <input type="number" name="shrinkage" step="0.01">
+    </div>
+
+    <!-- Availability -->
+    <div class="section">
+        <h3>📦 Availability</h3>
+        <label>Active:</label>
+        <select name="active">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+
+        <label>Stock:</label>
+        <input type="number" name="stock">
+    </div>
+
+    <!-- Preparation -->
+    <div class="section">
+        <h3>🍳 Preparation</h3>
+        <label>Preparation Time (minutes):</label>
+        <input type="number" name="preparationTime">
+
+        <label>Items (comma-separated):</label>
+        <input type="text" name="items">
+    </div>
+
+    <!-- Visualization -->
+    <div class="section">
+        <h3>🖼️ Visualization</h3>
+        <label>Image URL:</label>
+        <input type="text" name="image">
+
+        <label>Description:</label>
+        <textarea name="description" rows="4"></textarea>
+
+        <label>Groups (comma-separated):</label>
+        <input type="text" name="groups">
+
+    </div>
+
+    <button type="submit" id="productSubmit">✅ Submit</button>
+</form>
+<script src="../../static/js/price.js" th:src="@{/js/price.js}" defer></script>
+</body>
+</html>

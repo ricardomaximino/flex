@@ -3,7 +3,7 @@ package es.brasatech.flex;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"es.brasatech.flex", "es.brasatech.fastfood"})
 public class FlexApplication {
 
 	public static void main(String[] args) {

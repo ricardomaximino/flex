@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastBite - Order Online</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/menu.css" th:href="@{/css/menu.css}">
+
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-hamburger"></i> FastBite</a>
+            <div class="navbar-nav ms-auto">
+                <button class="btn btn-outline-light position-relative" onclick="toggleCart()">
+                    <i class="fas fa-shopping-cart"></i> Cart
+                    <span class="cart-badge" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step active" id="step1">1</div>
+            <div class="step" id="step2">2</div>
+            <div class="step" id="step3">3</div>
+        </div>
+
+        <!-- Menu Section -->
+        <div id="menuSection">
+            <h2 class="text-center mb-4">Our Delicious Menu</h2>
+
+            <!-- Navigation Tabs -->
+            <ul class="nav nav-tabs justify-content-center mb-4" id="menuTabs">
+                <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#combos" type="button">
+                        <i class="fas fa-utensils"></i> Combos
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#food" type="button">
+                        <i class="fas fa-hamburger"></i> Food
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#drinks" type="button">
+                        <i class="fas fa-glass-water"></i> Drinks
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="menuTabContent">
+                <!-- Combos Tab -->
+                <div class="tab-pane fade show active" id="combos">
+                    <div class="row" id="combosContainer">
+                        <!-- Combo items will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Food Tab -->
+                <div class="tab-pane fade" id="food">
+                    <div class="row" id="foodContainer">
+                        <!-- Food items will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Drinks Tab -->
+                <div class="tab-pane fade" id="drinks">
+                    <div class="row" id="drinksContainer">
+                        <!-- Drink items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Section -->
+        <div id="cartSection" style="display: none;">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h3>Your Order</h3>
+                    <div id="cartItems">
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                            <p>Your cart is empty</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="order-summary">
+                        <h4 class="mb-3">Order Summary</h4>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tax (8%):</span>
+                            <span id="tax">$0.00</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3 fw-bold">
+                            <span>Total:</span>
+                            <span id="total">$0.00</span>
+                        </div>
+                        <button class="btn btn-primary w-100 mb-2" onclick="proceedToCheckout()" disabled id="checkoutBtn">
+                            Proceed to Checkout
+                        </button>
+                        <button class="btn btn-outline-secondary w-100" onclick="backToMenu()">
+                            Continue Shopping
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirmation Section -->
+        <div id="confirmationSection" style="display: none;">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="confirmation-card">
+                        <h3 class="mb-4">Order Confirmation</h3>
+                        <div id="confirmationDetails">
+                            <!-- Order details will be populated here -->
+                        </div>
+                        <div class="mt-4">
+                            <button class="btn btn-success btn-lg me-3" onclick="submitOrder()">
+                                <i class="fas fa-check"></i> Confirm & Submit Order
+                            </button>
+                            <button class="btn btn-outline-secondary btn-lg" onclick="backToCart()">
+                                <i class="fas fa-arrow-left"></i> Back to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Section -->
+        <div id="successSection" style="display: none;">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <i class="fas fa-check-circle text-success fa-5x mb-3"></i>
+                        <h2 class="text-success mb-3">Order Submitted Successfully!</h2>
+                        <p class="mb-4">Thank you for your order. Your order number is <strong id="orderNumber"></strong></p>
+                        <p class="text-muted mb-4">You will receive a confirmation email shortly.</p>
+                        <button class="btn btn-primary btn-lg" onclick="startNewOrder()">
+                            <i class="fas fa-plus"></i> Place Another Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customization Modal -->
+    <div class="modal fade" id="customizeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Customize Your Order</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="customizationOptions">
+                        <!-- Customization options will be populated here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="addCustomizedItem()">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="../../static/js/menu.js" th:src="@{/js/menu.js}" defer></script>
+</body>
+</html>

@@ -18,4 +18,4 @@ logging:
   level:
     root: INFO
     es.brasatech: DEBUG
-    org.springframework: ERROR
+    org.springframework: INFO

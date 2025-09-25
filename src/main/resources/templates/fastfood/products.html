@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Menu</title>
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="Fast food product creation" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+        <meta name="author" content="BrasaTech" />
+        <meta name="generator" content="BrasaTech Digital Solutions" />
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" th:href="@{/images/favicon.png}" href="../../static/images/favicon.png" />
+
+        <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+
+    </head>
+    <body>
+        <header>
+            <h1>MENU</h1>
+        </header>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th>PRICE</th>
+                    <th>IMAGE</th>
+            </thead>
+            <tbody>
+                <tr th:each="product : ${products}">
+                    <td th:text="${product.id}">01</td>
+                    <td th:text="${product.name}">Kebab</td>
+                    <td th:text="${product.price}">7,50</td>
+                    <td th:text="${product.image}">image.jpg</td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
