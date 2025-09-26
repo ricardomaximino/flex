@@ -239,8 +239,9 @@ const menuData = {
 };
 
 // Customization options
-const customizationOptions = {
-    size: {
+const customizationOptions = [
+    {
+        id: 'size',
         name: 'Size',
         type: 'radio',
         options: [
@@ -249,7 +250,8 @@ const customizationOptions = {
             { name: 'Large', price: 3.00 }
         ]
     },
-    extras: {
+    {
+        id: 'extras',
         name: 'Add Extras',
         type: 'checkbox',
         options: [
@@ -259,7 +261,8 @@ const customizationOptions = {
             { name: 'Extra Sauce', price: 0.50 }
         ]
     },
-    removals: {
+    {
+        id: 'removals',
         name: 'Remove Items',
         type: 'checkbox',
         options: [
@@ -269,7 +272,7 @@ const customizationOptions = {
             { name: 'No Tomato', price: 0 }
         ]
     }
-};
+];
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
@@ -282,6 +285,8 @@ function handleMenuEvents() {
     addListenerToMenuCategory('combos');
     addListenerToMenuCategory('food');
     addListenerToMenuCategory('drinks');
+    document.getElementById('customizationCancelBtn').addEventListener('click', closeCustomizationModal);
+    document.getElementById('customizationSubmitBtn').addEventListener('click', addCustomizedItem);
 }
 
 function addListenerToMenuCategory(category) {
@@ -349,33 +354,33 @@ function customizeItem(itemId, category) {
 
 // Show customization modal
 function showCustomizationModal(item) {
-    const modalTitle = document.querySelector('#customizeModal .modal-title');
-    modalTitle.textContent = `Customize ${item.name}`;
+    // clear the options
+    customizationOptions.forEach(option => {
+        const parent = document.getElementById(option.id);
+        parent.style.display = "none";
+        // Reset radio buttons
+          const radios = parent.querySelectorAll('input[type="radio"]');
+          radios.forEach(radio => {
+            radio.checked = radio.defaultChecked;
+          });
 
-    const optionsContainer = document.getElementById('customizationOptions');
-
-    let html = '';
-    item.customizations.forEach(custType => {
-        const custOption = customizationOptions[custType];
-        html += `
-            <div class="mb-4">
-                <h6 class="fw-bold">${custOption.name}</h6>
-                ${custOption.options.map((option, index) => `
-                    <div class="form-check customization-item">
-                        <input class="form-check-input" type="${custOption.type}"
-                               name="${custType}" value="${option.name}"
-                               id="${custType}-${index}" data-price="${option.price}">
-                        <label class="form-check-label" for="${custType}-${index}">
-                            ${option.name} ${option.price > 0 ? `(+$${option.price.toFixed(2)})` : ''}
-                        </label>
-                    </div>
-                `).join('')}
-            </div>
-        `;
+          // Reset checkboxes
+          const checkboxes = parent.querySelectorAll('input[type="checkbox"]');
+          checkboxes.forEach(checkbox => {
+            checkbox.checked = checkbox.defaultChecked;
+          });
     });
 
-    optionsContainer.innerHTML = html;
+    // display the desired options
+        customizationOptions.forEach(option => {
+            let currentCustomizationElement = document.getElementById(option.id);
+            if(currentCustomizationElement && item.customizations.includes(option.id)){
+                currentCustomizationElement.style.display = "block";
+            }
+        });
 
+    const modalTitle = document.querySelector('#customizeModal .modal-title');
+    modalTitle.textContent = `Customize ${item.name}`;
     const modal = new bootstrap.Modal(document.getElementById('customizeModal'));
     modal.show();
 }
@@ -397,11 +402,21 @@ function addCustomizedItem() {
 
     addToCart(currentCustomization.item, currentCustomization.quantity, customizations);
 
-    const modal = bootstrap.Modal.getInstance(document.getElementById('customizeModal'));
-    modal.hide();
+    closeCustomizationModal();
 
     // Reset quantity to 1
     document.getElementById(`qty-${currentCustomization.item.id}`).textContent = '1';
+}
+
+// Close the modal in accessibility-compliant way
+function closeCustomizationModal() {
+    const modalElement = document.getElementById('customizeModal');
+    const focusedElement = modalElement.querySelector(':focus');
+    if (focusedElement) {
+      focusedElement.blur();
+    }
+    const modal = bootstrap.Modal.getInstance(modalElement);
+    modal.hide();
 }
 
 // Add item to cart
@@ -625,6 +640,7 @@ function submitOrder() {
     // Clear cart
     cart = [];
     updateCartDisplay();
+    updateStep(4);
 }
 
 // Start new order
