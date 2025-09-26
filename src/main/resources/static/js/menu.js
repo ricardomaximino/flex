@@ -273,50 +273,57 @@ const customizationOptions = {
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
-    renderMenu();
+    handleMenuEvents();
     updateCartDisplay();
 });
 
 // Render menu items
-function renderMenu() {
-    renderMenuCategory('combos');
-    renderMenuCategory('food');
-    renderMenuCategory('drinks');
+function handleMenuEvents() {
+    addListenerToMenuCategory('combos');
+    addListenerToMenuCategory('food');
+    addListenerToMenuCategory('drinks');
 }
 
-function renderMenuCategory(category) {
-    const container = document.getElementById(category + 'Container');
+function addListenerToMenuCategory(category) {
     const items = menuData[category];
+    items.forEach(function(product) {
+        let displayId = 'qty-' + product.id;
 
-    container.innerHTML = items.map(item => `
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card product-card h-100">
-                <img src="${item.image}" class="product-img" alt="${item.name}">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">${item.name}</h5>
-                    <p class="card-text text-muted">${item.description}</p>
-                    <div class="mt-auto">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="price-tag">$${item.price.toFixed(2)}</span>
-                            <div class="quantity-control">
-                                <button class="quantity-btn" onclick="changeQuantity('${item.id}', -1)">-</button>
-                                <span class="mx-2" id="qty-${item.id}">1</span>
-                                <button class="quantity-btn" onclick="changeQuantity('${item.id}', 1)">+</button>
-                            </div>
-                        </div>
-                        <button class="btn btn-add-to-cart w-100" onclick="customizeItem('${item.id}', '${category}')">
-                            <i class="fas fa-plus"></i> Add to Cart
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `).join('');
+        // add event listener to minus button
+        let minusButtonId = 'qty-' + product.id + '-minus';
+        let minusButton = document.getElementById(minusButtonId)
+        if(minusButton){
+            minusButton.addEventListener("click", function() {
+                changeQuantity(displayId, -1);
+            });
+        }
+
+        // add event listener to plus button
+        let qtyElement = document.getElementById(displayId);
+        let plusButtonId = 'qty-' + product.id + '-plus';
+        let plusButton = document.getElementById(plusButtonId)
+        if(plusButton){
+            plusButton.addEventListener("click", function() {
+                changeQuantity(displayId, 1);
+            });
+        }
+
+        // add event listener to add to cart button
+        let addToCartButtonId = 'add-' + product.id + '-to-cart';
+        let addToCartButton = document.getElementById(addToCartButtonId)
+        if(addToCartButton){
+            addToCartButton.addEventListener("click", function() {
+                customizeItem(product.id, category);
+            });
+        }
+
+    });
+
 }
 
 // Quantity control
 function changeQuantity(itemId, change) {
-    const qtyElement = document.getElementById(`qty-${itemId}`);
+    const qtyElement = document.getElementById(itemId);
     let currentQty = parseInt(qtyElement.textContent);
     const newQty = Math.max(1, currentQty + change);
     qtyElement.textContent = newQty;
