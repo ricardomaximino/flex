@@ -3,24 +3,37 @@
 let cart = [];
 let currentCustomization = {};
 let orderCounter = 1001;
+const apiUrl = 'http://localhost:8080/api/menu';
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
-    handleMenuEvents();
-    updateCartDisplay();
+    initData();
 });
 
+// Fetch menu data
+async function initData() {
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const data = await response.json();
+        handleMenuEvents(data);
+        updateCartDisplay();
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+}
+
 // Render menu items
-function handleMenuEvents() {
-    addListenerToMenuCategory('combos');
-    addListenerToMenuCategory('food');
-    addListenerToMenuCategory('drinks');
+function handleMenuEvents(data) {
+    addListenerToMenuCategory(data, 'combos');
+    addListenerToMenuCategory(data, 'food');
+    addListenerToMenuCategory(data, 'drinks');
     document.getElementById('customizationCancelBtn').addEventListener('click', closeCustomizationModal);
     document.getElementById('customizationSubmitBtn').addEventListener('click', addCustomizedItem);
 }
 
-function addListenerToMenuCategory(category) {
-    const items = menuData[category];
+function addListenerToMenuCategory(data, category) {
+    const items = data.menuData[category];
     items.forEach(function(product) {
         let displayId = 'qty-' + product.id;
 
@@ -34,7 +47,6 @@ function addListenerToMenuCategory(category) {
         }
 
         // add event listener to plus button
-        let qtyElement = document.getElementById(displayId);
         let plusButtonId = 'qty-' + product.id + '-plus';
         let plusButton = document.getElementById(plusButtonId)
         if(plusButton){
@@ -48,7 +60,7 @@ function addListenerToMenuCategory(category) {
         let addToCartButton = document.getElementById(addToCartButtonId)
         if(addToCartButton){
             addToCartButton.addEventListener("click", function() {
-                customizeItem(product.id, category);
+                customizeItem(data, product.id, category);
             });
         }
 
@@ -65,8 +77,8 @@ function changeQuantity(itemId, change) {
 }
 
 // Customize item
-function customizeItem(itemId, category) {
-    const item = menuData[category].find(i => i.id === itemId);
+function customizeItem(data, itemId, category) {
+    const item = data.menuData[category].find(i => i.id === itemId);
     const quantity = parseInt(document.getElementById(`qty-${itemId}`).textContent);
 
     currentCustomization = {
@@ -76,14 +88,14 @@ function customizeItem(itemId, category) {
     };
 
     if (item.customizations && item.customizations.length > 0) {
-        showCustomizationModal(item);
+        showCustomizationModal(data.customizationOptions, item);
     } else {
         addToCart(item, quantity, {});
     }
 }
 
 // Show customization modal
-function showCustomizationModal(item) {
+function showCustomizationModal(customizationOptions, item) {
     // clear the options
     customizationOptions.forEach(option => {
         const parent = document.getElementById(option.id);

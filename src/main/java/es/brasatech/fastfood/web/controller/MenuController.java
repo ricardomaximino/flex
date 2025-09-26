@@ -8,16 +8,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Controller
-@RequestMapping("/menu")
 public class MenuController {
 
-    @GetMapping
+    @GetMapping("/api/menu")
+    @ResponseBody
+    public Map<String, Object> getMenuData() {
+        return Map.of("menuData", menu(), "customizationOptions", customizationOptions());
+    }
+
+    @GetMapping("/menu")
     public String sample2(Model model) {
         return "fastfood/menu";
     }
@@ -55,7 +61,7 @@ public class MenuController {
             new MenuProduct("food3", "French Fries",new BigDecimal("3.99"),"Golden crispy seasoned fries","https://images.unsplash.com/photo-1576107232684-1279f390859f?w=400&h=300&fit=crop",new String[]{"size"}),
             new MenuProduct("food4", "Chicken Nuggets",new BigDecimal("5.99"),"6 piece crispy chicken nuggets","https://images.unsplash.com/photo-1562967916-eb82221dfb92?w=400&h=300&fit=crop",new String[]{"size", "extras"}),
             new MenuProduct("food5", "Spicy Wings",new BigDecimal("9.99"),"8 buffalo wings with ranch dip","https://images.unsplash.com/photo-1608039755401-742074f0548d?w=400&h=300&fit=crop",new String[]{"size", "extras"}),
-            new MenuProduct("food6", "Fish &Chips",new BigDecimal("11.99"),"Beer-battered cod with thick-cut chips","https://images.unsplash.com/photo-1544982503-9f984c14501a?w=400&h=300&fit=crop",new String[]{"extras", "removals"}),
+            new MenuProduct("food6", "Fish &Chips",new BigDecimal("11.99"),"Beer-battered cod with thick-cut chips","https://images.unsplash.com/photo-1544982503-9f984c14501a?w=400&h=300&fit=crop",new String[]{}),
             new MenuProduct("food7", "Onion Rings",new BigDecimal("4.99"),"Crispy beer-battered onion rings","https://images.unsplash.com/photo-1639024471283-03518883512d?w=400&h=300&fit=crop",new String[]{"size"}),
             new MenuProduct("food8", "Caesar Salad",new BigDecimal("6.99"),"Fresh romaine lettuce with caesar dressing","https://images.unsplash.com/photo-1512852939750-1305098529bf?w=400&h=300&fit=crop",new String[]{"extras", "removals"}),
             new MenuProduct("food9", "Hot Dog",new BigDecimal("4.99"),"All-beef hot dog with mustard and ketchup","https://images.pexels.com/photos/8946522/pexels-photo-8946522.jpeg?_gl=1*v0q01*_ga*OTk0NTc2NTE0LjE3NTg5MDEzMTA.*_ga_8JE65Q40S6*czE3NTg5MDEzMDkkbzEkZzEkdDE3NTg5MDIzOTYkajQzJGwwJGgw",new String[]{"extras", "removals"}),
