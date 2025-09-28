@@ -214,7 +214,7 @@ function updateCartDisplay() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCount.textContent = totalItems;
 
-    const checkoutBtn = document.getElementById('navBarCheckoutBtn');
+    const checkoutBtn = document.getElementById('cartCheckoutBtn');
     checkoutBtn.disabled = cart.length === 0;
 
     updateCartItems();
