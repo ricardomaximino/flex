@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FastBite - Order Online</title>
+    <title th:text="#{page.title}">FastBite - Order Online</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../static/css/menu.css" th:href="@{/css/menu.css}">
@@ -13,10 +13,10 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="fas fa-hamburger"></i> FastBite</a>
+            <a class="navbar-brand" href="#"><i class="fas fa-hamburger"></i> <span th:text="#{logo.title}">FastBite</span></a>
             <div class="navbar-nav ms-auto">
                 <button class="btn btn-outline-light position-relative" id="navBarCheckoutBtn">
-                    <i class="fas fa-shopping-cart"></i> Cart
+                    <i class="fas fa-shopping-cart"></i> <span th:text="#{label.cart}">Cart</span>
                     <span class="cart-badge" id="cartCount">0</span>
                 </button>
             </div>
@@ -40,17 +40,17 @@
             <ul class="nav nav-tabs justify-content-center mb-4" id="menuTabs">
                 <li class="nav-item">
                     <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#combos" type="button">
-                        <i class="fas fa-utensils"></i> Combos
+                        <i class="fas fa-utensils"></i> <span th:text="#{label.combos}">Combos</span>
                     </button>
                 </li>
                 <li class="nav-item">
                     <button class="nav-link" data-bs-toggle="tab" data-bs-target="#food" type="button">
-                        <i class="fas fa-hamburger"></i> Food
+                        <i class="fas fa-hamburger"></i> <span th:text="#{label.food}">Food</span>
                     </button>
                 </li>
                 <li class="nav-item">
                     <button class="nav-link" data-bs-toggle="tab" data-bs-target="#drinks" type="button">
-                        <i class="fas fa-glass-water"></i> Drinks
+                        <i class="fas fa-glass-water"></i> <span th:text="#{label.drinks}">Drinks</span>
                     </button>
                 </li>
             </ul>
@@ -77,7 +77,7 @@
                                             </div>
                                         </div>
                                         <button class="btn btn-add-to-cart w-100" th:id="${'add-' + product.id + '-to-cart'}">
-                                            <i class="fas fa-plus"></i> Add to Cart
+                                            <i class="fas fa-plus"></i> <span th:text="#{label.add.to.cart}">Add to Cart</span>
                                         </button>
                                     </div>
                                 </div>
@@ -107,7 +107,7 @@
                                             </div>
                                         </div>
                                         <button class="btn btn-add-to-cart w-100" th:id="${'add-' + product.id + '-to-cart'}">
-                                            <i class="fas fa-plus"></i> Add to Cart
+                                            <i class="fas fa-plus"></i> <span th:text="#{label.add.to.cart}">Add to Cart</span>
                                         </button>
                                     </div>
                                 </div>
@@ -136,7 +136,7 @@
                                             </div>
                                         </div>
                                         <button class="btn btn-add-to-cart w-100" th:id="${'add-' + product.id + '-to-cart'}">
-                                            <i class="fas fa-plus"></i> Add to Cart
+                                            <i class="fas fa-plus"></i> <span th:text="#{label.add.to.cart}">Add to Cart</span>
                                         </button>
                                     </div>
                                 </div>
@@ -231,17 +231,17 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Customize Your Order</h5>
+                    <h5 class="modal-title" th:data-title="#{customizer.title}">Customize Your Order</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div id="customizationOptions">
                         <!-- Customization options will be populated here -->
                         <div class="mb-4" th:id="${customizationOption.id}" th:each="customizationOption : ${customizationList}">
-                            <h6 class="fw-bold" th:text="${customizationOption.name}">Size</h6>
+                            <h6 class="fw-bold" th:text="#{${customizationOption.type.key}}">Size</h6>
                             <div class="form-check customization-item" th:each="option : ${customizationOption.options}">
-                                <input class="form-check-input" th:type="${customizationOption.type.value}" th:name="${customizationOption.type.value == 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" th:id="${customizationOption.id + '-' + option.name}" th:value="${option.name}" th:data-price="${option.price}" type="radio" name="optionId" value="Small" id="optionId" data-price="1.10">
-                                <label class="form-check-label" th:for="${customizationOption.type.value == 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" for="optionId">
+                                <input class="form-check-input" th:type="${customizationOption.inputType.value}" th:name="${customizationOption.inputType.value == 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" th:id="${customizationOption.id + '-' + option.name}" th:value="${option.name}" th:data-price="${option.price}" type="radio" name="optionId" value="Small" id="optionId" data-price="1.10">
+                                <label class="form-check-label" th:for="${customizationOption.inputType.value == 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" for="optionId">
                                     <span th:text="${option.name}"></span> <span th:if="${option.price > 0}" th:text="${option.price}"></span>
                                 </label>
                             </div>
@@ -249,8 +249,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="customizationCancelBtn">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="customizationSubmitBtn">Add to Cart</button>
+                    <button type="button" class="btn btn-secondary" id="customizationCancelBtn" th:text="#{button.cancel}">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="customizationSubmitBtn" th:text="#{button.add.to.cart}">Add to Cart</button>
                 </div>
             </div>
         </div>

@@ -33,9 +33,9 @@ public class MenuController {
     @ModelAttribute
     private List<Customization> customizationOptions() {
         return List.of(
-            new Customization("size", "Size", CustomizationInputType.RADIO, List.of(new CustomizationOption("Small", new BigDecimal("0.00")), new CustomizationOption("Medium", new BigDecimal("1.50")), new CustomizationOption("Large", new BigDecimal("3.00")))),
-            new Customization("extras", "Add Extras", CustomizationInputType.CHECKBOX, List.of(new CustomizationOption("Extra Cheese", new BigDecimal("1.00")), new CustomizationOption("Bacon", new BigDecimal("2.00")), new CustomizationOption("Avocado", new BigDecimal("1.50")), new CustomizationOption("Extra souce", new BigDecimal("0.50")))),
-            new Customization("removals", "Remove Items", CustomizationInputType.CHECKBOX, List.of(new CustomizationOption("No Onions", new BigDecimal("0.00")), new CustomizationOption("No Pickles", new BigDecimal("0.00")), new CustomizationOption("No Lettuce", new BigDecimal("0.00")), new CustomizationOption("No Tomato", new BigDecimal("0.00"))))
+            new Customization("size",  CustomizationType.SIZE,"Size", CustomizationInputType.RADIO, List.of(new CustomizationOption("Small", new BigDecimal("0.00")), new CustomizationOption("Medium", new BigDecimal("1.50")), new CustomizationOption("Large", new BigDecimal("3.00")))),
+            new Customization("extras", CustomizationType.ADD_EXTRA, "Add Extras", CustomizationInputType.CHECKBOX, List.of(new CustomizationOption("Extra Cheese", new BigDecimal("1.00")), new CustomizationOption("Bacon", new BigDecimal("2.00")), new CustomizationOption("Avocado", new BigDecimal("1.50")), new CustomizationOption("Extra souce", new BigDecimal("0.50")))),
+            new Customization("removals", CustomizationType.REMOVE_ITEMS, "Remove Items", CustomizationInputType.CHECKBOX, List.of(new CustomizationOption("No Onions", new BigDecimal("0.00")), new CustomizationOption("No Pickles", new BigDecimal("0.00")), new CustomizationOption("No Lettuce", new BigDecimal("0.00")), new CustomizationOption("No Tomato", new BigDecimal("0.00"))))
         );
     }
 

@@ -143,7 +143,7 @@ function showCustomizationModal(customizationOptions, item) {
         });
 
     const modalTitle = document.querySelector('#customizeModal .modal-title');
-    modalTitle.textContent = `Customize ${item.name}`;
+    modalTitle.textContent = modalTitle.dataset.title + ' ' + item.name;
     const modal = new bootstrap.Modal(document.getElementById('customizeModal'));
     modal.show();
 }
