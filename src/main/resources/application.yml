@@ -4,6 +4,8 @@ spring:
       - standalone
   application:
     name: flex
+  messages:
+    basename: i18n/messages
   data:
     mongodb:
       uri: ${MONGO_URI:mongodb://root:password@localhost:27017/?authSource=admin}
