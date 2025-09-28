@@ -1,9 +1,6 @@
 package es.brasatech.fastfood.web.controller;
 
-import es.brasatech.fastfood.web.dto.Customization;
-import es.brasatech.fastfood.web.dto.CustomizationOption;
-import es.brasatech.fastfood.web.dto.MenuData;
-import es.brasatech.fastfood.web.dto.MenuProduct;
+import es.brasatech.fastfood.web.dto.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,9 +33,9 @@ public class MenuController {
     @ModelAttribute
     private List<Customization> customizationOptions() {
         return List.of(
-            new Customization("size", "Size", "radio", List.of(new CustomizationOption("Small", new BigDecimal("0.00")), new CustomizationOption("Medium", new BigDecimal("1.50")), new CustomizationOption("Large", new BigDecimal("3.00")))),
-            new Customization("extras", "Add Extras", "checkbox", List.of(new CustomizationOption("Extra Cheese", new BigDecimal("1.00")), new CustomizationOption("Bacon", new BigDecimal("2.00")), new CustomizationOption("Avocado", new BigDecimal("1.50")), new CustomizationOption("Extra souce", new BigDecimal("0.50")))),
-            new Customization("removals", "Remove Items", "checkbox", List.of(new CustomizationOption("No Onions", new BigDecimal("0.00")), new CustomizationOption("No Pickles", new BigDecimal("0.00")), new CustomizationOption("No Lettuce", new BigDecimal("0.00")), new CustomizationOption("No Tomato", new BigDecimal("0.00"))))
+            new Customization("size", "Size", CustomizationInputType.RADIO, List.of(new CustomizationOption("Small", new BigDecimal("0.00")), new CustomizationOption("Medium", new BigDecimal("1.50")), new CustomizationOption("Large", new BigDecimal("3.00")))),
+            new Customization("extras", "Add Extras", CustomizationInputType.CHECKBOX, List.of(new CustomizationOption("Extra Cheese", new BigDecimal("1.00")), new CustomizationOption("Bacon", new BigDecimal("2.00")), new CustomizationOption("Avocado", new BigDecimal("1.50")), new CustomizationOption("Extra souce", new BigDecimal("0.50")))),
+            new Customization("removals", "Remove Items", CustomizationInputType.CHECKBOX, List.of(new CustomizationOption("No Onions", new BigDecimal("0.00")), new CustomizationOption("No Pickles", new BigDecimal("0.00")), new CustomizationOption("No Lettuce", new BigDecimal("0.00")), new CustomizationOption("No Tomato", new BigDecimal("0.00"))))
         );
     }
 
@@ -74,15 +71,15 @@ public class MenuController {
             new MenuProduct("drink1","Coca Cola",new BigDecimal("2.99"),"Classic refreshing cola","https://images.unsplash.com/photo-1581006852262-e4307cf6283a?w=400&h=300&fit=crop",new String[]{"size"}),
             new MenuProduct("drink2","Sprite",new BigDecimal("2.99"),"Lemon-lime soda","https://images.pexels.com/photos/31332092/pexels-photo-31332092.jpeg?_gl=1*1dijsg4*_ga*OTk0NTc2NTE0LjE3NTg5MDEzMTA.*_ga_8JE65Q40S6*czE3NTg5MDEzMDkkbzEkZzEkdDE3NTg5MDI5MzMkajExJGwwJGgw",new String[]{"size"}),
             new MenuProduct("drink3","Orange Juice",new BigDecimal("3.49"),"Fresh squeezed orange juice","https://images.unsplash.com/photo-1613478223719-2ab802602423?w=400&h=300&fit=crop",new String[]{"size"}),
-            new MenuProduct("drink4","Iced Coffee",new BigDecimal("4.99"),"Cold brew coffee with ice","https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=400&h=300&fit=crop",new String[]{"size','extras"}),
-            new MenuProduct("drink5","Vanilla Milkshake",new BigDecimal("5.99"),"Creamy vanilla milkshake","https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&h=300&fit=crop",new String[]{"size','extras"}),
-            new MenuProduct("drink6","Chocolate Milkshake",new BigDecimal("5.99"),"Rich chocolate milkshake","https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=400&h=300&fit=crop",new String[]{"size','extras"}),
-            new MenuProduct("drink7","Strawberry Milkshake",new BigDecimal("5.99"),"Fresh strawberry milkshake","https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&h=300&fit=crop",new String[]{"size','extras"}),
+            new MenuProduct("drink4","Iced Coffee",new BigDecimal("4.99"),"Cold brew coffee with ice","https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=400&h=300&fit=crop",new String[]{"size", "extras"}),
+            new MenuProduct("drink5","Vanilla Milkshake",new BigDecimal("5.99"),"Creamy vanilla milkshake","https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&h=300&fit=crop",new String[]{"size", "extras"}),
+            new MenuProduct("drink6","Chocolate Milkshake",new BigDecimal("5.99"),"Rich chocolate milkshake","https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=400&h=300&fit=crop",new String[]{"size", "extras"}),
+            new MenuProduct("drink7","Strawberry Milkshake",new BigDecimal("5.99"),"Fresh strawberry milkshake","https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&h=300&fit=crop",new String[]{"size", "extras"}),
             new MenuProduct("drink8","Lemonade",new BigDecimal("3.99"),"Fresh squeezed lemonade","https://images.pexels.com/photos/109275/pexels-photo-109275.jpeg?_gl=1*1tbhz8h*_ga*OTk0NTc2NTE0LjE3NTg5MDEzMTA.*_ga_8JE65Q40S6*czE3NTg5MDEzMDkkbzEkZzEkdDE3NTg5MDI3MjUkajM2JGwwJGgw",new String[]{"size"}),
-            new MenuProduct("drink9","Hot Coffee",new BigDecimal("2.99"),"Freshly brewed coffee","https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop",new String[]{"size','extras"}),
+            new MenuProduct("drink9","Hot Coffee",new BigDecimal("2.99"),"Freshly brewed coffee","https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop",new String[]{"size", "extras"}),
             new MenuProduct("drink10","Energy Drink",new BigDecimal("4.99"),"Blue energy boost drink","https://images.unsplash.com/photo-1527960471264-932f39eb5846?w=400&h=300&fit=crop",new String[]{"size"}),
             new MenuProduct("drink11","Water Bottle",new BigDecimal("1.99"),"Pure spring water","https://images.pexels.com/photos/11789722/pexels-photo-11789722.jpeg?_gl=1*o353m2*_ga*OTk0NTc2NTE0LjE3NTg5MDEzMTA.*_ga_8JE65Q40S6*czE3NTg5MDEzMDkkbzEkZzEkdDE3NTg5MDMyMTgkajYwJGwwJGgw",new String[]{}),
-            new MenuProduct("drink12","Iced Tea",new BigDecimal("3.49"),"Sweet iced tea","https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop",new String[]{"size','extras"})
+            new MenuProduct("drink12","Iced Tea",new BigDecimal("3.49"),"Sweet iced tea","https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop",new String[]{"size", "extras"})
         );
     }
 }

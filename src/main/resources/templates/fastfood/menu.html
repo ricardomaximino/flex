@@ -240,8 +240,8 @@
                         <div class="mb-4" th:id="${customizationOption.id}" th:each="customizationOption : ${customizationList}">
                             <h6 class="fw-bold" th:text="${customizationOption.name}">Size</h6>
                             <div class="form-check customization-item" th:each="option : ${customizationOption.options}">
-                                <input class="form-check-input" th:type="${customizationOption.type}" th:name="${customizationOption.type== 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" th:id="${customizationOption.id + '-' + option.name}" th:value="${option.name}" th:data-price="${option.price}" type="radio" name="optionId" value="Small" id="optionId" data-price="1.10">
-                                <label class="form-check-label" th:for="${customizationOption.type== 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" for="optionId">
+                                <input class="form-check-input" th:type="${customizationOption.type.value}" th:name="${customizationOption.type.value == 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" th:id="${customizationOption.id + '-' + option.name}" th:value="${option.name}" th:data-price="${option.price}" type="radio" name="optionId" value="Small" id="optionId" data-price="1.10">
+                                <label class="form-check-label" th:for="${customizationOption.type.value == 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" for="optionId">
                                     <span th:text="${option.name}"></span> <span th:if="${option.price > 0}" th:text="${option.price}"></span>
                                 </label>
                             </div>
