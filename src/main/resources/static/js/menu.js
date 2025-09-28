@@ -16,7 +16,7 @@ async function initData() {
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
-        handleMenuEvents(data);
+        handleAddEventListener(data);
         updateCartDisplay();
     } catch (error) {
         console.error('Fetch error:', error);
@@ -24,10 +24,31 @@ async function initData() {
 }
 
 // Render menu items
-function handleMenuEvents(data) {
+function handleAddEventListener(data) {
+    // Navbar
+    document.getElementById('navBarCheckoutBtn').addEventListener('click', toggleCart);
+
+    // Combos Tab
     addListenerToMenuCategory(data, 'combos');
+
+    // Food Tab
     addListenerToMenuCategory(data, 'food');
+
+    // Drinks Tab
     addListenerToMenuCategory(data, 'drinks');
+
+    // Cart Section
+    document.getElementById('cartCheckoutBtn').addEventListener('click', proceedToCheckout);
+    document.getElementById('cartBackToMenuBtn').addEventListener('click', backToMenu);
+
+    // Confirmation Sections
+    document.getElementById('submitOrderBtn').addEventListener('click', submitOrder);
+    document.getElementById('backToCartBtn').addEventListener('click', backToCart);
+
+    // Success Section
+    document.getElementById('startNewOrderBtn').addEventListener('click', startNewOrder);
+
+    // Customization Modal
     document.getElementById('customizationCancelBtn').addEventListener('click', closeCustomizationModal);
     document.getElementById('customizationSubmitBtn').addEventListener('click', addCustomizedItem);
 }
@@ -193,7 +214,7 @@ function updateCartDisplay() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCount.textContent = totalItems;
 
-    const checkoutBtn = document.getElementById('checkoutBtn');
+    const checkoutBtn = document.getElementById('navBarCheckoutBtn');
     checkoutBtn.disabled = cart.length === 0;
 
     updateCartItems();

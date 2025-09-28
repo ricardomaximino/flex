@@ -15,7 +15,7 @@
         <div class="container">
             <a class="navbar-brand" href="#"><i class="fas fa-hamburger"></i> FastBite</a>
             <div class="navbar-nav ms-auto">
-                <button class="btn btn-outline-light position-relative" onclick="toggleCart()">
+                <button class="btn btn-outline-light position-relative" id="navBarCheckoutBtn">
                     <i class="fas fa-shopping-cart"></i> Cart
                     <span class="cart-badge" id="cartCount">0</span>
                 </button>
@@ -175,10 +175,10 @@
                             <span>Total:</span>
                             <span id="total">$0.00</span>
                         </div>
-                        <button class="btn btn-primary w-100 mb-2" onclick="proceedToCheckout()" disabled id="checkoutBtn">
+                        <button class="btn btn-primary w-100 mb-2" disabled id="cartCheckoutBtn">
                             Proceed to Checkout
                         </button>
-                        <button class="btn btn-outline-secondary w-100" onclick="backToMenu()">
+                        <button class="btn btn-outline-secondary w-100" id="cartBackToMenuBtn">
                             Continue Shopping
                         </button>
                     </div>
@@ -196,10 +196,10 @@
                             <!-- Order details will be populated here -->
                         </div>
                         <div class="mt-4">
-                            <button class="btn btn-success btn-lg me-3" onclick="submitOrder()">
+                            <button class="btn btn-success btn-lg me-3" id="submitOrderBtn">
                                 <i class="fas fa-check"></i> Confirm & Submit Order
                             </button>
-                            <button class="btn btn-outline-secondary btn-lg" onclick="backToCart()">
+                            <button class="btn btn-outline-secondary btn-lg" id="backToCartBtn">
                                 <i class="fas fa-arrow-left"></i> Back to Cart
                             </button>
                         </div>
@@ -217,7 +217,7 @@
                         <h2 class="text-success mb-3">Order Submitted Successfully!</h2>
                         <p class="mb-4">Thank you for your order. Your order number is <strong id="orderNumber"></strong></p>
                         <p class="text-muted mb-4">You will receive a confirmation email shortly.</p>
-                        <button class="btn btn-primary btn-lg" onclick="startNewOrder()">
+                        <button class="btn btn-primary btn-lg" id="startNewOrderBtn">
                             <i class="fas fa-plus"></i> Place Another Order
                         </button>
                     </div>
