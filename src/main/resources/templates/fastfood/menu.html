@@ -61,7 +61,8 @@
                 <div class="tab-pane fade show active" id="combos">
                     <div class="row" id="combosContainer">
                         <!-- Combo items will be populated by thymeleaf -->
-                        <div class="col-lg-4 col-md-6 mb-4" th:id="${product.id}" th:each="product : ${menuData.combos}"
+                        <div class="col-lg-4 col-md-6 mb-4" th:each="product : ${menuData.combos}"
+                             th:id="${product.id}"
                              th:data-customizations="${product.customizationsAsString}"
                              th:data-name="${product.name}"
                              th:data-description="${product.description}"
@@ -97,7 +98,14 @@
                 <div class="tab-pane fade" id="food">
                     <div class="row" id="foodContainer">
                         <!-- Combo items will be populated by thymeleaf -->
-                        <div class="col-lg-4 col-md-6 mb-4" th:each="product : ${menuData.food}">
+                        <div class="col-lg-4 col-md-6 mb-4" th:each="product : ${menuData.food}"
+                             th:id="${product.id}"
+                             th:data-customizations="${product.customizationsAsString}"
+                             th:data-name="${product.name}"
+                             th:data-description="${product.description}"
+                             th:data-image="${product.image}"
+                             th:data-price="${product.price}"
+                        >
                             <div class="card product-card h-100">
                                 <img th:src="${product.image}" src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400&h=300&fit=crop" class="product-img" th:alt="${product.name}">
                                 <div class="card-body d-flex flex-column">
@@ -126,7 +134,14 @@
                 <div class="tab-pane fade" id="drinks">
                     <div class="row" id="drinksContainer">
                         <!-- Combo items will be populated by thymeleaf -->
-                        <div class="col-lg-4 col-md-6 mb-4" th:each="product : ${menuData.drinks}">
+                        <div class="col-lg-4 col-md-6 mb-4" th:each="product : ${menuData.drinks}"
+                             th:id="${product.id}"
+                             th:data-customizations="${product.customizationsAsString}"
+                             th:data-name="${product.name}"
+                             th:data-description="${product.description}"
+                             th:data-image="${product.image}"
+                             th:data-price="${product.price}"
+                        >
                             <div class="card product-card h-100">
                                 <img th:src="${product.image}" src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400&h=300&fit=crop" class="product-img" th:alt="${product.name}">
                                 <div class="card-body d-flex flex-column">

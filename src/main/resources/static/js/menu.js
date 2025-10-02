@@ -87,7 +87,7 @@ function changeQuantity(itemId, change) {
 // Customize item
 function customizeItem(itemId, category) {
     const quantity = parseInt(document.getElementById(`qty-${itemId}`).textContent);
-    const customizations = document.getElementById(itemId).dataset.customizations.split(',');
+    const customizations = document.getElementById(itemId).dataset.customizations?.split(',');
 
     currentCustomization = {
         itemId: itemId,
