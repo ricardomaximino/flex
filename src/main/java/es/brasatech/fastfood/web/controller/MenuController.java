@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class MenuController {
@@ -22,6 +23,8 @@ public class MenuController {
 
     @GetMapping("/menu")
     public String sample2(Model model) {
+        String availableCustomizations = customizationOptions().stream().map(Customization::id).collect(Collectors.joining(","));
+        model.addAttribute("availableCustomizations", availableCustomizations);
         return "fastfood/menu";
     }
 
@@ -43,7 +46,7 @@ public class MenuController {
     private List<MenuProduct> combos() {
         return List.of(
             new MenuProduct("combo1", "Big Bite Combo", new BigDecimal("12.99"), "Double cheeseburger, large fries, and medium drink", "https://images.pexels.com/photos/15076692/pexels-photo-15076692.jpeg?_gl=1*bi69dj*_ga*OTk0NTc2NTE0LjE3NTg5MDEzMTA.*_ga_8JE65Q40S6*czE3NTg5MDEzMDkkbzEkZzEkdDE3NTg5MDE1NTkkajU5JGwwJGgw", new String[] {"size", "extras", "removals"}),
-            new MenuProduct("combo2", "Chicken Deluxe Combo", new BigDecimal("11.99"), "Crispy chicken burger, fries, and drink", "https://images.pexels.com/photos/2983101/pexels-photo-2983101.jpeg?_gl=1*t1bllg*_ga*OTk0NTc2NTE0LjE3NTg5MDEzMTA.*_ga_8JE65Q40S6*czE3NTg5MDEzMDkkbzEkZzEkdDE3NTg5MDI0NzckajQzJGwwJGgw", new String[] {"size", "extras", "removals"}),
+            new MenuProduct("combo2", "Chicken Deluxe Combo", new BigDecimal("12.00"), "Crispy chicken burger, fries, and drink", "https://images.pexels.com/photos/2983101/pexels-photo-2983101.jpeg?_gl=1*t1bllg*_ga*OTk0NTc2NTE0LjE3NTg5MDEzMTA.*_ga_8JE65Q40S6*czE3NTg5MDEzMDkkbzEkZzEkdDE3NTg5MDI0NzckajQzJGwwJGgw", new String[] {"size", "extras", "removals"}),
             new MenuProduct("combo3", "Fish Supreme Combo", new BigDecimal("13.99"), "Fish fillet, fries, coleslaw, and drink", "https://images.pexels.com/photos/18713428/pexels-photo-18713428.jpeg?_gl=1*xw0sgd*_ga*OTk0NTc2NTE0LjE3NTg5MDEzMTA.*_ga_8JE65Q40S6*czE3NTg5MDEzMDkkbzEkZzEkdDE3NTg5MDI2MjgkajMyJGwwJGgw", new String[] {"size", "extras", "removals"}),
             new MenuProduct("combo4", "Veggie Paradise Combo", new BigDecimal("10.99"), "Plant-based burger, sweet potato fries, and drink", "https://images.unsplash.com/photo-1520072959219-c595dc870360?w=400&h=300&fit=crop", new String[] {"size", "extras", "removals"}),
             new MenuProduct("combo5", "BBQ Bacon Combo", new BigDecimal("14.99"), "BBQ bacon burger, onion rings, and drink", "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=300&fit=crop", new String[] {"size", "extras", "removals"}),

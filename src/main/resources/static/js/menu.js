@@ -3,39 +3,26 @@
 let cart = [];
 let currentCustomization = {};
 let orderCounter = 1001;
-const apiUrl = 'http://localhost:8080/api/menu';
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
-    initData();
+    handleAddEventListener();
+    updateCartDisplay();
 });
 
-// Fetch menu data
-async function initData() {
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        const data = await response.json();
-        handleAddEventListener(data);
-        updateCartDisplay();
-    } catch (error) {
-        console.error('Fetch error:', error);
-    }
-}
-
 // Render menu items
-function handleAddEventListener(data) {
+function handleAddEventListener() {
     // Navbar
     document.getElementById('navBarCheckoutBtn').addEventListener('click', toggleCart);
 
     // Combos Tab
-    addListenerToMenuCategory(data, 'combos');
+    addListenerToMenuCategory('combos');
 
     // Food Tab
-    addListenerToMenuCategory(data, 'food');
+    addListenerToMenuCategory('food');
 
     // Drinks Tab
-    addListenerToMenuCategory(data, 'drinks');
+    addListenerToMenuCategory('drinks');
 
     // Cart Section
     document.getElementById('cartCheckoutBtn').addEventListener('click', proceedToCheckout);
@@ -53,40 +40,40 @@ function handleAddEventListener(data) {
     document.getElementById('customizationSubmitBtn').addEventListener('click', addCustomizedItem);
 }
 
-function addListenerToMenuCategory(data, category) {
-    const items = data.menuData[category];
-    items.forEach(function(product) {
-        let displayId = 'qty-' + product.id;
+function addListenerToMenuCategory(category) {
+    const parent = document.getElementById(category);
+    // buttons
+    const buttons = parent.querySelectorAll('button');
+    const suffix = 'submit'; // Replace with your desired suffix
 
-        // add event listener to minus button
-        let minusButtonId = 'qty-' + product.id + '-minus';
-        let minusButton = document.getElementById(minusButtonId)
-        if(minusButton){
-            minusButton.addEventListener("click", function() {
+    buttons.forEach(button => {
+        // minus
+        const minusSuffix ='-minus';
+        if (button.id?.endsWith(minusSuffix)) {
+            button.addEventListener("click", function() {
+                const displayId = button.id.replace(minusSuffix, '');
                 changeQuantity(displayId, -1);
             });
         }
 
-        // add event listener to plus button
-        let plusButtonId = 'qty-' + product.id + '-plus';
-        let plusButton = document.getElementById(plusButtonId)
-        if(plusButton){
-            plusButton.addEventListener("click", function() {
+        // plus
+        const plusSuffix = '-plus';
+        if (button.id?.endsWith(plusSuffix)) {
+            button.addEventListener("click", function() {
+                const displayId = button.id.replace(plusSuffix, '');
                 changeQuantity(displayId, 1);
             });
         }
 
-        // add event listener to add to cart button
-        let addToCartButtonId = 'add-' + product.id + '-to-cart';
-        let addToCartButton = document.getElementById(addToCartButtonId)
-        if(addToCartButton){
-            addToCartButton.addEventListener("click", function() {
-                customizeItem(data, product.id, category);
+        // to-cart
+        const toCartSuffix = '-to-cart';
+        if (button.id?.endsWith(toCartSuffix)) {
+            button.addEventListener("click", function() {
+                const productId = button.id.replace(/^add-/, '').replace(new RegExp(toCartSuffix + '$'), '');
+                customizeItem(productId, category);
             });
         }
-
     });
-
 }
 
 // Quantity control
@@ -98,28 +85,29 @@ function changeQuantity(itemId, change) {
 }
 
 // Customize item
-function customizeItem(data, itemId, category) {
-    const item = data.menuData[category].find(i => i.id === itemId);
+function customizeItem(itemId, category) {
     const quantity = parseInt(document.getElementById(`qty-${itemId}`).textContent);
+    const customizations = document.getElementById(itemId).dataset.customizations.split(',');
 
     currentCustomization = {
-        item: item,
+        itemId: itemId,
         quantity: quantity,
         customizations: {}
     };
 
-    if (item.customizations && item.customizations.length > 0) {
-        showCustomizationModal(data.customizationOptions, item);
+    if (customizations && customizations.length > 0) {
+        showCustomizationModal(itemId, customizations);
     } else {
-        addToCart(item, quantity, {});
+        addToCart(itemId, quantity, {});
     }
 }
 
 // Show customization modal
-function showCustomizationModal(customizationOptions, item) {
+function showCustomizationModal(itemId, customizations) {
     // clear the options
+    const customizationOptions = document.getElementById('customizeModal').dataset.availableCustomizations.split(',');
     customizationOptions.forEach(option => {
-        const parent = document.getElementById(option.id);
+        const parent = document.getElementById(option);
         parent.style.display = "none";
         // Reset radio buttons
           const radios = parent.querySelectorAll('input[type="radio"]');
@@ -136,14 +124,15 @@ function showCustomizationModal(customizationOptions, item) {
 
     // display the desired options
         customizationOptions.forEach(option => {
-            let currentCustomizationElement = document.getElementById(option.id);
-            if(currentCustomizationElement && item.customizations.includes(option.id)){
+            let currentCustomizationElement = document.getElementById(option);
+            if(currentCustomizationElement && customizations.includes(option)){
                 currentCustomizationElement.style.display = "block";
             }
         });
 
+    const productName = document.getElementById(itemId).dataset.name;
     const modalTitle = document.querySelector('#customizeModal .modal-title');
-    modalTitle.textContent = modalTitle.dataset.title + ' ' + item.name;
+    modalTitle.textContent = modalTitle.dataset.title + ' ' + productName;
     const modal = new bootstrap.Modal(document.getElementById('customizeModal'));
     modal.show();
 }
@@ -163,12 +152,12 @@ function addCustomizedItem() {
         });
     });
 
-    addToCart(currentCustomization.item, currentCustomization.quantity, customizations);
+    addToCart(currentCustomization.itemId, currentCustomization.quantity, customizations);
 
     closeCustomizationModal();
 
     // Reset quantity to 1
-    document.getElementById(`qty-${currentCustomization.item.id}`).textContent = '1';
+    document.getElementById(`qty-${currentCustomization.itemId}`).textContent = '1';
 }
 
 // Close the modal in accessibility-compliant way
@@ -183,29 +172,37 @@ function closeCustomizationModal() {
 }
 
 // Add item to cart
-function addToCart(item, quantity, customizations) {
+function addToCart(itemId, quantity, customizations) {
+    const name = document.getElementById(itemId).dataset.name;
+    const description = document.getElementById(itemId).dataset.description;
+    const image = document.getElementById(itemId).dataset.image;
+    const productPrice = parseFloat(document.getElementById(itemId).dataset.price);
+    const price = calculateItemPrice(productPrice, customizations);
+
     const cartItem = {
-        id: `${item.id}-${Date.now()}`,
-        item: item,
+        id: `${itemId}-${Date.now()}`,
+        itemId: itemId,
+        name: name,
+        description: description,
+        image: image,
         quantity: quantity,
         customizations: customizations,
-        price: calculateItemPrice(item, customizations)
+        price: price
     };
 
     cart.push(cartItem);
     updateCartDisplay();
-    showToast(`${item.name} added to cart!`);
+    showToast(`${name} added to cart!`);
 }
 
 // Calculate item price with customizations
-function calculateItemPrice(item, customizations) {
-    let price = item.price;
+function calculateItemPrice(productPrice, customizations) {
     Object.values(customizations).forEach(custArray => {
         custArray.forEach(cust => {
-            price += cust.price;
+            productPrice += cust.price;
         });
     });
-    return price;
+    return productPrice;
 }
 
 // Update cart display
@@ -244,11 +241,11 @@ function updateCartItems() {
             <div class="cart-item">
                 <div class="row align-items-center">
                     <div class="col-md-2">
-                        <img src="${cartItem.item.image}" class="img-fluid rounded" alt="${cartItem.item.name}">
+                        <img src="${cartItem.image}" class="img-fluid rounded" alt="${cartItem.name}">
                     </div>
                     <div class="col-md-4">
-                        <h6 class="mb-1">${cartItem.item.name}</h6>
-                        <small class="text-muted">${cartItem.item.description}</small>
+                        <h6 class="mb-1">${cartItem.name}</h6>
+                        <small class="text-muted">${cartItem.description}</small>
                         <div class="mt-2">${customizationsHtml}</div>
                     </div>
                     <div class="col-md-2">
@@ -291,8 +288,8 @@ function removeFromCart(cartItemId) {
 // Update order summary
 function updateOrderSummary() {
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const tax = subtotal * 0.08;
-    const total = subtotal + tax;
+    const tax = subtotal * 0.10;
+    const total = subtotal;
 
     document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
     document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
@@ -341,8 +338,8 @@ function backToCart() {
 function populateConfirmationDetails() {
     const confirmationDetails = document.getElementById('confirmationDetails');
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const tax = subtotal * 0.08;
-    const total = subtotal + tax;
+    const tax = subtotal * 0.10;
+    const total = subtotal;
 
     let html = `
         <div class="row">
@@ -358,7 +355,7 @@ function populateConfirmationDetails() {
         html += `
             <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                 <div>
-                    <strong>${cartItem.item.name}</strong> x ${cartItem.quantity}
+                    <strong>${cartItem.name}</strong> x ${cartItem.quantity}
                     <div class="mt-1">${customizationsHtml}</div>
                 </div>
                 <div class="fw-bold">$${(cartItem.price * cartItem.quantity).toFixed(2)}</div>
@@ -376,7 +373,7 @@ function populateConfirmationDetails() {
                         <span>$${subtotal.toFixed(2)}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span>Tax (8%):</span>
+                        <span>Tax (10%):</span>
                         <span>$${tax.toFixed(2)}</span>
                     </div>
                     <hr>
