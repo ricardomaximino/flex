@@ -131,6 +131,10 @@ function showCustomizationModal(itemId, customizations) {
         });
 
     const productName = document.getElementById(itemId).dataset.name;
+    const image = document.getElementById(itemId).dataset.image;
+    document.getElementById('modalProductImage').src = image;
+    document.getElementById('modalProductImage').alt = productName;
+
     const modalTitle = document.querySelector('#customizeModal .modal-title');
     modalTitle.textContent = modalTitle.dataset.title + ' ' + productName;
     const modal = new bootstrap.Modal(document.getElementById('customizeModal'));

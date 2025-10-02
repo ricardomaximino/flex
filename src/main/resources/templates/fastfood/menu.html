@@ -249,22 +249,37 @@
 
     <!-- Customization Modal -->
     <div class="modal fade" th:data-available-customizations="${availableCustomizations}" id="customizeModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" th:data-title="#{customizer.title}">Customize Your Order</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="customizationOptions">
-                        <!-- Customization options will be populated here -->
-                        <div class="mb-4" th:id="${customizationOption.id}" th:each="customizationOption : ${customizationList}">
-                            <h6 class="fw-bold" th:text="#{${customizationOption.type.key}}">Size</h6>
-                            <div class="form-check customization-item" th:each="option : ${customizationOption.options}">
-                                <input class="form-check-input" th:type="${customizationOption.inputType.value}" th:name="${customizationOption.inputType.value == 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" th:id="${customizationOption.id + '-' + option.name}" th:value="${option.name}" th:data-price="${option.price}" type="radio" name="optionId" value="Small" id="optionId" data-price="1.10">
-                                <label class="form-check-label" th:for="${customizationOption.inputType.value == 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" for="optionId">
-                                    <span th:text="${option.name}"></span> <span th:if="${option.price > 0}" th:text="${option.price}"></span>
-                                </label>
+                    <div class="row">
+                        <!-- Product Image Section -->
+                        <div class="col-md-4 mb-3">
+                            <img id="modalProductImage" src="" alt="Product" class="img-fluid rounded shadow-sm">
+                            <div class="text-center mt-3">
+                                <h5 id="modalProductName" class="fw-bold"></h5>
+                                <p id="modalProductDescription" class="text-muted small"></p>
+                                <span id="modalProductPrice" class="badge bg-danger fs-6"></span>
+                            </div>
+                        </div>
+
+                        <!-- Customization Options Section -->
+                        <div class="col-md-8">
+                            <div id="customizationOptions">
+                                <!-- Customization options will be populated here -->
+                                <div class="mb-4" th:id="${customizationOption.id}" th:each="customizationOption : ${customizationList}">
+                                    <h6 class="fw-bold"><i class="fas fa-utensils me-2"></i><span th:text="#{${customizationOption.type.key}}">Size</span></h6>
+                                    <div class="form-check customization-item" th:each="option : ${customizationOption.options}">
+                                        <input class="form-check-input" th:type="${customizationOption.inputType.value}" th:name="${customizationOption.inputType.value == 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" th:id="${customizationOption.id + '-' + option.name}" th:value="${option.name}" th:data-price="${option.price}" type="radio" name="optionId" value="Small" id="optionId" data-price="1.10">
+                                        <label class="form-check-label" th:for="${customizationOption.inputType.value == 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" for="optionId">
+                                            <span th:text="${option.name}"></span> <span th:if="${option.price > 0}" th:text="${option.price}"></span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
