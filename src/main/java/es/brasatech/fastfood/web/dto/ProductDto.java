@@ -1,4 +1,7 @@
-package es.brasatech.fastfood;
+package es.brasatech.fastfood.web.dto;
+
+import es.brasatech.fastfood.domain.MeasurementUnit;
+import es.brasatech.fastfood.domain.Price;
 
 import java.math.BigDecimal;
 

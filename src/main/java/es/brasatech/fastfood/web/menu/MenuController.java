@@ -1,6 +1,5 @@
-package es.brasatech.fastfood.web.controller;
+package es.brasatech.fastfood.web.menu;
 
-import es.brasatech.fastfood.web.dto.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,15 +37,16 @@ public class MenuController {
         return List.of(
             new Customization("size",  CustomizationType.SIZE,"Size", CustomizationInputType.RADIO, List.of(new CustomizationOption("Small", new BigDecimal("0.00")), new CustomizationOption("Medium", new BigDecimal("1.50")), new CustomizationOption("Large", new BigDecimal("3.00")))),
             new Customization("extras", CustomizationType.ADD_EXTRA, "Add Extras", CustomizationInputType.CHECKBOX, List.of(new CustomizationOption("Extra Cheese", new BigDecimal("1.00")), new CustomizationOption("Bacon", new BigDecimal("2.00")), new CustomizationOption("Avocado", new BigDecimal("1.50")), new CustomizationOption("Extra souce", new BigDecimal("0.50")))),
-            new Customization("removals", CustomizationType.REMOVE_ITEMS, "Remove Items", CustomizationInputType.CHECKBOX, List.of(new CustomizationOption("No Onions", new BigDecimal("0.00")), new CustomizationOption("No Pickles", new BigDecimal("0.00")), new CustomizationOption("No Lettuce", new BigDecimal("0.00")), new CustomizationOption("No Tomato", new BigDecimal("0.00"))))
+            new Customization("removals", CustomizationType.REMOVE_ITEMS, "Remove Items", CustomizationInputType.CHECKBOX, List.of(new CustomizationOption("No Onions", new BigDecimal("0.00")), new CustomizationOption("No Pickles", new BigDecimal("0.00")), new CustomizationOption("No Lettuce", new BigDecimal("0.00")), new CustomizationOption("No Tomato", new BigDecimal("0.00")))),
+            new Customization("ingredients", CustomizationType.TOGGLE_ITEMS, "Ingredients", CustomizationInputType.HIDDEN, List.of(new CustomizationOption("Onions", new BigDecimal("0.00")), new CustomizationOption("Pickles", new BigDecimal("0.00")), new CustomizationOption("Lettuce", new BigDecimal("0.00")), new CustomizationOption("Tomato", new BigDecimal("0.00"))))
         );
     }
 
 
     private List<MenuProduct> combos() {
         return List.of(
-            new MenuProduct("combo1", "Big Bite Combo", new BigDecimal("12.99"), "Double cheeseburger, large fries, and medium drink", "https://images.pexels.com/photos/15076692/pexels-photo-15076692.jpeg?_gl=1*bi69dj*_ga*OTk0NTc2NTE0LjE3NTg5MDEzMTA.*_ga_8JE65Q40S6*czE3NTg5MDEzMDkkbzEkZzEkdDE3NTg5MDE1NTkkajU5JGwwJGgw", new String[] {"size", "extras", "removals"}),
-            new MenuProduct("combo2", "Chicken Deluxe Combo", new BigDecimal("12.00"), "Crispy chicken burger, fries, and drink", "https://images.pexels.com/photos/2983101/pexels-photo-2983101.jpeg?_gl=1*t1bllg*_ga*OTk0NTc2NTE0LjE3NTg5MDEzMTA.*_ga_8JE65Q40S6*czE3NTg5MDEzMDkkbzEkZzEkdDE3NTg5MDI0NzckajQzJGwwJGgw", new String[] {"size", "extras", "removals"}),
+            new MenuProduct("combo1", "Big Bite Combo", new BigDecimal("12.99"), "Double cheeseburger, large fries, and medium drink", "https://images.pexels.com/photos/15076692/pexels-photo-15076692.jpeg?_gl=1*bi69dj*_ga*OTk0NTc2NTE0LjE3NTg5MDEzMTA.*_ga_8JE65Q40S6*czE3NTg5MDEzMDkkbzEkZzEkdDE3NTg5MDE1NTkkajU5JGwwJGgw", new String[] {"size", "ingredients"}),
+            new MenuProduct("combo2", "Chicken Deluxe Combo", new BigDecimal("12.00"), "Crispy chicken burger, fries, and drink", "https://images.pexels.com/photos/2983101/pexels-photo-2983101.jpeg?_gl=1*t1bllg*_ga*OTk0NTc2NTE0LjE3NTg5MDEzMTA.*_ga_8JE65Q40S6*czE3NTg5MDEzMDkkbzEkZzEkdDE3NTg5MDI0NzckajQzJGwwJGgw", new String[] {"ingredients"}),
             new MenuProduct("combo3", "Fish Supreme Combo", new BigDecimal("13.99"), "Fish fillet, fries, coleslaw, and drink", "https://images.pexels.com/photos/18713428/pexels-photo-18713428.jpeg?_gl=1*xw0sgd*_ga*OTk0NTc2NTE0LjE3NTg5MDEzMTA.*_ga_8JE65Q40S6*czE3NTg5MDEzMDkkbzEkZzEkdDE3NTg5MDI2MjgkajMyJGwwJGgw", new String[] {"size", "extras", "removals"}),
             new MenuProduct("combo4", "Veggie Paradise Combo", new BigDecimal("10.99"), "Plant-based burger, sweet potato fries, and drink", "https://images.unsplash.com/photo-1520072959219-c595dc870360?w=400&h=300&fit=crop", new String[] {"size", "extras", "removals"}),
             new MenuProduct("combo5", "BBQ Bacon Combo", new BigDecimal("14.99"), "BBQ bacon burger, onion rings, and drink", "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=300&fit=crop", new String[] {"size", "extras", "removals"}),

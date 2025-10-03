@@ -36,15 +36,12 @@ function handleAddEventListener() {
     document.getElementById('startNewOrderBtn').addEventListener('click', startNewOrder);
 
     // Customization Modal
-    document.getElementById('customizationCancelBtn').addEventListener('click', closeCustomizationModal);
-    document.getElementById('customizationSubmitBtn').addEventListener('click', addCustomizedItem);
+    addEventListenerToCustomizationModel();
 }
 
-function addListenerToMenuCategory(category) {
-    const parent = document.getElementById(category);
-    // buttons
+function addEventListenerToCustomizationModel() {
+    const parent = document.getElementById('customizationOptions');
     const buttons = parent.querySelectorAll('button');
-    const suffix = 'submit'; // Replace with your desired suffix
 
     buttons.forEach(button => {
         // minus
@@ -52,7 +49,7 @@ function addListenerToMenuCategory(category) {
         if (button.id?.endsWith(minusSuffix)) {
             button.addEventListener("click", function() {
                 const displayId = button.id.replace(minusSuffix, '');
-                changeQuantity(displayId, -1);
+                changeQuantityToggle(displayId, -1);
             });
         }
 
@@ -61,7 +58,36 @@ function addListenerToMenuCategory(category) {
         if (button.id?.endsWith(plusSuffix)) {
             button.addEventListener("click", function() {
                 const displayId = button.id.replace(plusSuffix, '');
-                changeQuantity(displayId, 1);
+                changeQuantityToggle(displayId, 1);
+            });
+        }
+    });
+
+    document.getElementById('customizationCancelBtn').addEventListener('click', closeCustomizationModal);
+    document.getElementById('customizationSubmitBtn').addEventListener('click', addCustomizedItem);
+}
+
+function addListenerToMenuCategory(category) {
+    const parent = document.getElementById(category);
+    // buttons
+    const buttons = parent.querySelectorAll('button');
+
+    buttons.forEach(button => {
+        // minus
+        const minusSuffix ='-minus';
+        if (button.id?.endsWith(minusSuffix)) {
+            button.addEventListener("click", function() {
+                const displayId = button.id.replace(minusSuffix, '');
+                changeQuantityNoLessThanOne(displayId, -1);
+            });
+        }
+
+        // plus
+        const plusSuffix = '-plus';
+        if (button.id?.endsWith(plusSuffix)) {
+            button.addEventListener("click", function() {
+                const displayId = button.id.replace(plusSuffix, '');
+                changeQuantityNoLessThanOne(displayId, 1);
             });
         }
 
@@ -77,10 +103,36 @@ function addListenerToMenuCategory(category) {
 }
 
 // Quantity control
-function changeQuantity(itemId, change) {
+function changeQuantityToggle(itemId, change) {
+    changeQuantityNoLessThanZero(itemId, change)
+    const hiddenInput = document.getElementById(itemId.replace('qty-', ''));
+    const minusButton = document.getElementById(itemId + '-minus');
+    const plusButton = document.getElementById(itemId + '-plus');
+    const displayElement = document.getElementById(itemId);
+    let currentQty = parseInt(displayElement.textContent);
+    hiddenInput.value = displayElement.textContent
+    if(currentQty == 0) {
+        plusButton.disabled = false;
+        minusButton.disabled = true;
+    } else {
+        plusButton.disabled = true;
+        minusButton.disabled = false;
+    }
+}
+
+// Quantity control no less than one
+function changeQuantityNoLessThanOne(itemId, change) {
     const qtyElement = document.getElementById(itemId);
     let currentQty = parseInt(qtyElement.textContent);
     const newQty = Math.max(1, currentQty + change);
+    qtyElement.textContent = newQty;
+}
+
+// Quantity control no less than zero
+function changeQuantityNoLessThanZero(itemId, change) {
+    const qtyElement = document.getElementById(itemId);
+    let currentQty = parseInt(qtyElement.textContent);
+    const newQty = Math.max(0, currentQty + change);
     qtyElement.textContent = newQty;
 }
 
@@ -120,6 +172,22 @@ function showCustomizationModal(itemId, customizations) {
           checkboxes.forEach(checkbox => {
             checkbox.checked = checkbox.defaultChecked;
           });
+
+          // Reset Ingredients
+          const ingredientsParent = document.getElementById('customizationOptions');
+          const buttons = ingredientsParent.querySelectorAll('button');
+
+          buttons.forEach(button => {
+              // minus
+              const minusSuffix ='-minus';
+              if (button.id?.endsWith(minusSuffix)) {
+                  const displayId = button.id.replace(minusSuffix, '');
+                  changeQuantityNoLessThanOne(displayId, -1000);
+                  button.disabled = false;
+                  document.getElementById(displayId + '-plus').disabled = true;
+                  document.getElementById(displayId.replace('qty-', '')).value = '1';
+              }
+          });
     });
 
     // display the desired options
@@ -154,6 +222,16 @@ function addCustomizedItem() {
             name: input.value,
             price: parseFloat(input.dataset.price)
         });
+    });
+    const ingredients = document.querySelectorAll('#customizationOptions input[type="hidden"]');
+    ingredients.forEach(input => {
+        if(input.value == '0') {
+            if(!customizations[input.type]) customizations[input.type] = [];
+            customizations[input.type].push({
+                name: input.dataset.no + ' ' + input.dataset.name,
+                price: parseFloat(input.dataset.price)
+            });
+        }
     });
 
     addToCart(currentCustomization.itemId, currentCustomization.quantity, customizations);

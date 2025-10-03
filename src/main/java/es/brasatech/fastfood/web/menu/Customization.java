@@ -1,4 +1,4 @@
-package es.brasatech.fastfood.web.dto;
+package es.brasatech.fastfood.web.menu;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package es.brasatech.fastfood.web.dto;
+package es.brasatech.fastfood.web.menu;
 
 import lombok.Getter;
 
@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum CustomizationType {
     SIZE("customizer.type.size"),
     ADD_EXTRA("customizer.type.add.extra"),
-    REMOVE_ITEMS("customizer.type.remove.items");
+    REMOVE_ITEMS("customizer.type.remove.items"),
+    TOGGLE_ITEMS("customizer.type.toggle.items");
 
     private final String key;
 

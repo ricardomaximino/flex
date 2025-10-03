@@ -1,4 +1,4 @@
-package es.brasatech.fastfood;
+package es.brasatech.fastfood.domain;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

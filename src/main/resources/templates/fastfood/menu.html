@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -261,7 +261,7 @@
                         <div class="col-md-4 mb-3">
                             <img id="modalProductImage" src="" alt="Product" class="img-fluid rounded shadow-sm">
                             <div class="text-center mt-3">
-                                <h5 id="modalProductName" class="fw-bold"></h5>
+                                <h5 id="modalProductName" class="fw-bold">Price</h5>
                                 <p id="modalProductDescription" class="text-muted small"></p>
                                 <span id="modalProductPrice" class="badge bg-danger fs-6"></span>
                             </div>
@@ -273,11 +273,42 @@
                                 <!-- Customization options will be populated here -->
                                 <div class="mb-4" th:id="${customizationOption.id}" th:each="customizationOption : ${customizationList}">
                                     <h6 class="fw-bold"><i class="fas fa-utensils me-2"></i><span th:text="#{${customizationOption.type.key}}">Size</span></h6>
-                                    <div class="form-check customization-item" th:each="option : ${customizationOption.options}">
-                                        <input class="form-check-input" th:type="${customizationOption.inputType.value}" th:name="${customizationOption.inputType.value == 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" th:id="${customizationOption.id + '-' + option.name}" th:value="${option.name}" th:data-price="${option.price}" type="radio" name="optionId" value="Small" id="optionId" data-price="1.10">
+                                    <div class="form-check customization-item" th:if="${customizationOption.inputType.value != 'hidden'}" th:each="option : ${customizationOption.options}">
+                                        <input class="form-check-input"
+                                           th:type="${customizationOption.inputType.value}"
+                                           th:name="${customizationOption.inputType.value == 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})"
+                                           th:id="${customizationOption.id + '-' + option.name}"
+                                           th:value="${option.name}"
+                                           th:data-price="${option.price}"
+                                           type="radio" name="optionId" value="Small" id="optionId" data-price="1.10"
+                                        />
                                         <label class="form-check-label" th:for="${customizationOption.inputType.value == 'radio'}? (${customizationOption.id}) : (${customizationOption.id + '-' + option.name})" for="optionId">
                                             <span th:text="${option.name}"></span> <span th:if="${option.price > 0}" th:text="${option.price}"></span>
                                         </label>
+                                    </div>
+                                    <div class="ingredient-control" th:if="${customizationOption.inputType.value == 'hidden'}" th:each="option : ${customizationOption.options}">
+                                        <div class="ingredient-info">
+                                            <div class="ingredient-name" th:text="${option.name}">Onions</div>
+                                            <div class="ingredient-price" th:if="${option.price > 0}" th:text="${option.price}">1.00</div>
+                                        </div>
+                                        <div class="ingredient-quantity-control">
+                                            <button type="button" class="ingredient-btn" th:id="${'qty-' + customizationOption.id + '-' + option.name + '-minus'}" id="qty-hidden-option-minus">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <span th:id="${'qty-' + customizationOption.id + '-' + option.name}" class="ingredient-quantity" id="qty-hidden-option">1</span>
+                                            <button type="button" class="ingredient-btn" th:id="${'qty-' + customizationOption.id + '-' + option.name + '-plus'}" id="qty-hidden-option-plus" disabled>
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <input
+                                           th:type="${customizationOption.inputType.value}"
+                                           th:name="${customizationOption.id + '-' + option.name}"
+                                           th:id="${customizationOption.id + '-' + option.name}"
+                                           th:data-no="#{customizer.type.toggle.no}"
+                                           th:data-name="${option.name}"
+                                           th:data-price="${option.price}"
+                                           type="hidden" id="hidden-option" value="1"
+                                        />
                                     </div>
                                 </div>
                             </div>
