@@ -1,0 +1,24 @@
+# Use a slim, secure base image
+FROM eclipse-temurin:21.0.7_6-jre-alpine-3.21
+
+# Define build-time argument for the JAR name
+ARG NAME=flex.jar
+
+# Set working directory
+WORKDIR /app
+
+# Create non-root user and group
+RUN addgroup -S javauser && adduser -S -G javauser javauser
+
+# Set permissions for app and temp directory
+RUN chown -R javauser:javauser /app \
+    && chmod 1777 /tmp  # safer than 777 for shared temp
+
+# Switch to non-root user
+USER javauser
+
+# Copy JAR file into container
+COPY ${NAME} app.jar
+
+# Use exec form for ENTRYPOINT to avoid shell issues
+ENTRYPOINT ["java", "-jar", "app.jar"]
