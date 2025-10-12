@@ -27,6 +27,9 @@ jobs:
         java-version: '25'
         distribution: 'graalvm'
         cache: maven
+    - name: Build Native Image
+      run: mvn -Pnative native:build -DskipTests
+
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ricardomaximino/flex:latest
 
