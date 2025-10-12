@@ -68,3 +68,17 @@ jobs:
         FULL_GCR_IMAGE=${REGION}-docker.pkg.dev/${PROJECT_ID}/${ARTIFACT_REGISTRY_REPO}/${IMAGE_NAME}:${{ github.sha }}
         docker tag ricardomaximino/flex-non-native:latest $FULL_GCR_IMAGE
         docker push $FULL_GCR_IMAGE
+        
+        # Make the full image name available for the next step
+        echo "FULL_GCR_IMAGE=$FULL_GCR_IMAGE" >> $GITHUB_ENV
+
+    - name: Deploy to Google Cloud Run
+      uses: google-github-actions/deploy-cloudrun@v2
+      with:
+        service: ${{ env.CLOUD_RUN_SERVICE }}
+        region: ${{ env.REGION }}
+        image: ${{ env.FULL_GCR_IMAGE }} # Use the image pushed to Artifact Registry
+
+    - name: Show Cloud Run URL
+      run: |
+        echo "Cloud Run service URL: ${{ steps.deploy.outputs.url }}"
