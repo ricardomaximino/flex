@@ -2,22 +2,28 @@ package es.brasatech.fastfood.web.menu;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Controller
 public class MenuController {
 
-    @GetMapping("/api/menu")
     @ResponseBody
+    @GetMapping("/api/menu")
     public Map<String, Object> getMenuData() {
         return Map.of("menuData", menu(), "customizationOptions", customizationOptions());
+    }
+
+    @ResponseBody
+    @PostMapping("/api/order")
+    public Map<String, Object> postOrder(@RequestBody List<CartItem> order) {
+        order.forEach(System.out::println);
+        return Map.of("orderNumber", UUID.randomUUID().toString());
     }
 
     @GetMapping("/menu")

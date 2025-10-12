@@ -3,6 +3,7 @@
 let cart = [];
 let currentCustomization = {};
 let orderCounter = 1001;
+const apiUrl = 'http://localhost:8081/api/order'
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
@@ -473,16 +474,29 @@ function populateConfirmationDetails() {
 
 // Submit order
 function submitOrder() {
-    const orderNumber = `FB${orderCounter++}`;
-    document.getElementById('orderNumber').textContent = orderNumber;
-
     document.getElementById('confirmationSection').style.display = 'none';
     document.getElementById('successSection').style.display = 'block';
 
-    // Clear cart
-    cart = [];
-    updateCartDisplay();
-    updateStep(4);
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cart)
+    }).then(response => {
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
+        return response.json();
+    }).then(data => {
+        const orderNumber = data.orderNumber;
+        document.getElementById('orderNumber').textContent = orderNumber;
+        console.log(data);
+        // Clear cart
+        cart = [];
+        updateCartDisplay();
+        updateStep(4);
+    }). catch(error => {
+        console.log(error)
+    });
 }
 
 // Start new order
