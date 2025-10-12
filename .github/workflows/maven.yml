@@ -37,6 +37,6 @@ jobs:
       uses: docker/login-action@v3
       with:
         username: ${{ vars.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Push image to Docker Hub
       run: docker push ricardomaximino/flex:latest
