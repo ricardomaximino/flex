@@ -1,10 +1,13 @@
 package es.brasatech.fastfood.web.menu;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -20,10 +23,13 @@ public class MenuController {
     }
 
     @ResponseBody
-    @PostMapping("/api/order")
-    public Map<String, Object> postOrder(@RequestBody List<CartItem> order) {
-        order.forEach(System.out::println);
-        return Map.of("orderNumber", UUID.randomUUID().toString());
+    @PostMapping("/api/save-cart")
+    public Map<String, Object> postOrder(@RequestBody List<CartItemDto> cartItems, HttpSession session) {
+        var orderNumber = UUID.randomUUID().toString();
+        session.setAttribute("cart", cartItems);
+        session.setAttribute("orderNumber", orderNumber);
+
+        return Map.of("status", "success", "orderNumber", orderNumber);
     }
 
     @GetMapping("/menu")
@@ -31,6 +37,28 @@ public class MenuController {
         String availableCustomizations = customizationOptions().stream().map(Customization::id).collect(Collectors.joining(","));
         model.addAttribute("availableCustomizations", availableCustomizations);
         return "fastfood/menu";
+    }
+
+    @GetMapping("/select-payment")
+    public String selectPayment(HttpSession session, Model model) {
+        var orderNumber = (String) session.getAttribute("orderNumber");
+        var cartItems = (List<CartItemDto>) session.getAttribute("cart");
+        var order = new OrderDto(orderNumber,
+                LocalDateTime.now(),
+                10D,
+                BigDecimal.valueOf(10D),
+                cartItems != null? cartItems : new ArrayList<>(),
+                BigDecimal.valueOf(100D),
+                BigDecimal.valueOf(1000D));
+        model.addAttribute("order", order);
+        return "fastfood/paymentSelection";
+    }
+
+    @GetMapping("/confirmation")
+    public String confirmation(HttpSession session, Model model) {
+        var orderNumber = (String) session.getAttribute("orderNumber");
+        model.addAttribute("orderNumber", orderNumber);
+        return "fastfood/confirmation";
     }
 
     @ModelAttribute

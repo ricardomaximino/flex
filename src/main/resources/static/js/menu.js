@@ -33,9 +33,6 @@ function handleAddEventListener() {
     document.getElementById('submitOrderBtn').addEventListener('click', submitOrder);
     document.getElementById('backToCartBtn').addEventListener('click', backToCart);
 
-    // Success Section
-    document.getElementById('startNewOrderBtn').addEventListener('click', startNewOrder);
-
     // Customization Modal
     addEventListenerToCustomizationModel();
 }
@@ -474,34 +471,25 @@ function populateConfirmationDetails() {
 
 // Submit order
 function submitOrder() {
-    document.getElementById('confirmationSection').style.display = 'none';
-    document.getElementById('successSection').style.display = 'block';
-
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(cart)
-    }).then(response => {
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
-        return response.json();
-    }).then(data => {
-        const orderNumber = data.orderNumber;
-        document.getElementById('orderNumber').textContent = orderNumber;
-        console.log(data);
-        // Clear cart
-        cart = [];
-        updateCartDisplay();
-        updateStep(4);
-    }). catch(error => {
-        console.log(error)
-    });
+    // First, save cart to session via API
+        fetch('/api/save-cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]')?.content
+            },
+            body: JSON.stringify(cart)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Then redirect using simple form or window.location
+            window.location.assign('/select-payment');
+        })
+        .catch(error => console.error('Error:', error));
 }
 
 // Start new order
 function startNewOrder() {
-    document.getElementById('successSection').style.display = 'none';
     document.getElementById('menuSection').style.display = 'block';
     updateStep(1);
 }
