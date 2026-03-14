@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>es.brasatech</groupId>
 	<artifactId>flex</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>flex</name>
-	<description>Flex is a software framework designed for easy customization of both its data handling and </description>
+	<description>Flex is a software framework designed for easy customization of both its data handling and data extension</description>
 	<properties>
 		<java.version>25</java.version>
 		<spring-modulith.version>1.4.1</spring-modulith.version>
