@@ -89,9 +89,13 @@ Flex is optimized for GraalVM Native Image.
    mvn spring-boot:run -Dspring-boot.run.arguments="-agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/native-image"
    ```
 
-2. **Build Native Executable**:
+2. **Build Native Executable by now it works only if you build a specific profile**:
    ```bash
-   mvn -Pnative native:build -DskipTests
+   mvn -Pnative -Dspring.profiles.active=standalone native:compile
+   ```
+
+   ```bash
+   mvn -Pnative -Dspring.profiles.active=prod native:compile
    ```
 
 3. **Run Native Executable**:
@@ -118,3 +122,23 @@ docker build -t flex:native .
 - **Dynamic Form Builders**: Save form submissions with varying structures.
 - **Microservices**: Use as a flexible metadata store or "document sidecar".
 
+
+$ java -Djarmode=tools -jar my-app.jar extract --destination application
+$ cd application
+$ java -XX:AOTCacheOutput=app.aot -Dspring.context.exit=onRefresh -jar my-app.jar
+
+$ java -XX:AOTCache=app.aot -jar my-app.jar
+
+$ mvn -Pnative spring-boot:build-image
+
+mvnw -Pnative -Dspring.profiles.active=standalone native:compile
+./mvnw -Pnative -Dspring.profiles.active=prod native:compile
+
+
+java -agentlib:native-image-agent=config-output-dir=./src/main/resources/META-INF/native-image/es.brasatech/flex -H:AgentMergeDirs=./src/main/resources/META-INF/native-image/es.brasatech/flex -jar ./target/flex-1.0.0.jar mvn -Pnative package -DskipTest
+
+mvn -Pnative native:compile-no-fork -DskipTest 
+
+mvn spring-boot:build-image -Pnative
+
+mvn spring-boot:run -D spring-boot.run.arguments="-agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/native-image -H:AgentMergeDirs=./src/main/resources/META-INF/native-image/es.brasatech/flex"

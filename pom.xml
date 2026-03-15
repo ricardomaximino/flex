@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.7</version>
+		<version>3.5.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>es.brasatech</groupId>
@@ -14,7 +14,7 @@
 	<name>flex</name>
 	<description>Flex is a software framework designed for easy customization of both its data handling and data extension</description>
 	<properties>
-		<java.version>25</java.version>
+		<java.version>21</java.version>
 		<spring-modulith.version>1.4.1</spring-modulith.version>
 	</properties>
 	<dependencies>
@@ -153,6 +153,9 @@
 			<plugin>
 				<groupId>org.graalvm.buildtools</groupId>
 				<artifactId>native-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>es.brasatech.flex.FlexApplication</mainClass>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
