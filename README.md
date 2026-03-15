@@ -92,6 +92,9 @@ Flex is optimized for GraalVM Native Image.
 2. **Build Native Executable by now it works only if you build a specific profile**:
    ```bash
    mvn -Pnative -Dspring.profiles.active=standalone native:compile
+   docker build -t ricardomaximino/flex-native:latest .
+   docker push ricardomaximino/flex-native:latest
+   docker run --rm -p 8080:8080 ricardomaximino/flex-native
    ```
 
    ```bash
